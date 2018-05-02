@@ -4,7 +4,8 @@
   "description": "A basic interval timer",
   "main": "index.js",
   "scripts": {
-    "build": "parcel ./src/index.html"
+    "dev": "parcel ./src/index.html",
+    "build": "parcel build ./src/index.html"
   },
   "keywords": [
     "timer",
@@ -13,7 +14,8 @@
   "author": "Neil Syiemlieh",
   "license": "MIT",
   "devDependencies": {
-    "parcel-bundler": "^1.7.1"
+    "parcel-bundler": "^1.7.1",
+    "postcss-modules": "^1.1.0"
   },
   "dependencies": {
     "react": "^16.3.2",
