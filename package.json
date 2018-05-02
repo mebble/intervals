@@ -4,12 +4,15 @@
   "description": "A basic interval timer",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "parcel ./src/index.html"
   },
   "keywords": [
     "timer",
     "interval"
   ],
   "author": "Neil Syiemlieh",
-  "license": "MIT"
+  "license": "MIT",
+  "devDependencies": {
+    "parcel-bundler": "^1.7.1"
+  }
 }
