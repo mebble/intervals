@@ -8,9 +8,9 @@ class Interval extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			totalSeconds: 0,
-			minutes: 0,
-			seconds: 0,
+			totalSeconds: 0,  // between 0 and 3600
+			minutes: 0,  // between 0 and 60
+			seconds: 0,  // between 0 and 59
 		};
 
 		this.handleMinChange = this.handleMinChange.bind(this);
@@ -23,9 +23,14 @@ class Interval extends React.Component {
 	handleMinChange(event) {
 		const { seconds } = this.state;
 		const newVal = parseInt(event.target.value, 10);
-		const newMin = (isNaN(newVal) || newVal < 0) ?  // true when input value starts with non-int or is negative
-			0 :
-			newVal;
+		let newMin;
+		if (isNaN(newVal) || newVal < 0) {
+			newMin = 0;  // true when input value starts with non-int or is negative
+		} else if (newVal > 60 || (newVal === 60 && seconds > 0)) {
+			return;
+		} else {
+			newMin = newVal;
+		}
 
 		const newTotal = newMin * 60 + seconds;
 		this.updateTime(newTotal);
@@ -36,10 +41,8 @@ class Interval extends React.Component {
 		const newVal = parseInt(event.target.value, 10);
 		let newSec;
 		if (isNaN(newVal) || newVal < 0) {
-			// true when input value starts with non-int or is negative
-			newSec = 0;
+			newSec = 0;  // true when input value starts with non-int or is negative
 		} else if (newVal >= 60) {
-			// seconds is bounded between 0 and 59
 			return;
 		} else {
 			newSec = newVal;
@@ -51,7 +54,7 @@ class Interval extends React.Component {
 
 	increment() {
 		const { totalSeconds } = this.state;
-		const newTotal = totalSeconds + 1;
+		const newTotal = (totalSeconds + 1) > 3600 ? totalSeconds : totalSeconds + 1;
 		this.updateTime(newTotal);
 	}
 
@@ -67,6 +70,7 @@ class Interval extends React.Component {
 			minutes:  Math.floor(newTotalSecs / 60),
 			seconds: newTotalSecs % 60
 		});
+		// console.log(newTotalSecs);
 	}
 
 	render() {
@@ -78,9 +82,9 @@ class Interval extends React.Component {
 					onClick={this.decrement}
 				>-</button>
 				<Input
-					leftValue={minutes}
+					leftValue={pad(minutes)}
 					onLeftChange={this.handleMinChange}
-					rightValue={seconds}
+					rightValue={pad(seconds)}
 					onRightChange={this.handleSecChange}
 				/>
 				<button
@@ -91,5 +95,13 @@ class Interval extends React.Component {
 		);
 	}
 };
+
+function pad(num) {
+	let stringVal = num.toString();
+	if (stringVal.length === 1) {
+		stringVal = '0' + stringVal;
+	}
+	return stringVal;
+}
 
 export default Interval;
