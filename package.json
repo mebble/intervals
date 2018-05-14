@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "dev": "parcel ./src/index.html",
+    "prebuild": "rm -rf ./dist",
     "build": "parcel build ./src/index.html"
   },
   "keywords": [

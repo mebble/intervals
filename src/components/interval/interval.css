@@ -1,12 +1,29 @@
 .Interval {
-	
-}
-.btn {
-	
+	width: 30vw;
+	margin: 0 auto 10px auto;
+	padding: 5px;
+	display: flex;
+	justify-content: space-evenly;
 }
 .btn--inc {
 	color: blue;
 }
 .btn--dec {
 	color: red;
+}
+
+@media screen and (max-width: 1024px) {
+	.Interval {
+		width: 50vw;
+	}
+}
+@media screen and (max-width: 672px) {
+	.Interval {
+		width: 75vw;
+	}
+}
+@media screen and (max-width: 360px) {
+	.Interval {
+		width: 90vw;
+	}
 }
