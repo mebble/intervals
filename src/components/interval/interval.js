@@ -8,52 +8,69 @@ class Interval extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			leftValue: 0,
-			rightValue: 0,
+			totalSeconds: 0,
+			minutes: 0,
+			seconds: 0,
 		};
 
-		this.handleLeftChange = this.handleLeftChange.bind(this);
-		this.handleRightChange = this.handleRightChange.bind(this);
+		this.handleMinChange = this.handleMinChange.bind(this);
+		this.handleSecChange = this.handleSecChange.bind(this);
 		this.increment = this.increment.bind(this);
 		this.decrement = this.decrement.bind(this);
+		this.updateTime = this.updateTime.bind(this);
 	}
 
-	handleLeftChange(event) {
+	handleMinChange(event) {
+		const { seconds } = this.state;
 		const newVal = parseInt(event.target.value, 10);
-		if (isNaN(newVal)) return;
+		const newMin = (isNaN(newVal) || newVal < 0) ?  // true when input value starts with non-int or is negative
+			0 :
+			newVal;
 
-		this.setState({
-			leftValue: newVal
-		});
+		const newTotal = newMin * 60 + seconds;
+		this.updateTime(newTotal);
 	}
 
-	handleRightChange(event) {
+	handleSecChange(event) {
+		const { minutes } = this.state;
 		const newVal = parseInt(event.target.value, 10);
-		if (isNaN(newVal)) return;
+		let newSec;
+		if (isNaN(newVal) || newVal < 0) {
+			// true when input value starts with non-int or is negative
+			newSec = 0;
+		} else if (newVal >= 60) {
+			// seconds is bounded between 0 and 59
+			return;
+		} else {
+			newSec = newVal;
+		}
 
-		this.setState({
-			rightValue: newVal
-		});
+		const newTotal = minutes * 60 + newSec;
+		this.updateTime(newTotal);
 	}
 
 	increment() {
-		/* TODO - update rightValue on module 60 */
-		const current = this.state.leftValue;
-		this.setState({
-			leftValue: current + 1
-		});
+		const { totalSeconds } = this.state;
+		const newTotal = totalSeconds + 1;
+		this.updateTime(newTotal);
 	}
 
 	decrement() {
-		/* TODO - update rightValue on module 60 */
-		const current = this.state.leftValue;
+		const { totalSeconds } = this.state;
+		const newTotal = (totalSeconds - 1) < 0 ? 0 : totalSeconds - 1;
+		this.updateTime(newTotal);
+	}
+
+	updateTime(newTotalSecs) {
 		this.setState({
-			leftValue: current - 1
+			totalSeconds: newTotalSecs,
+			minutes:  Math.floor(newTotalSecs / 60),
+			seconds: newTotalSecs % 60
 		});
 	}
 
 	render() {
-		const { leftValue, rightValue } = this.state;
+		const { minutes, seconds } = this.state;
 		return (
 			<div className={classes.Interval}>
 				<button
@@ -61,10 +78,10 @@ class Interval extends React.Component {
 					onClick={this.decrement}
 				>-</button>
 				<Input
-					leftValue={leftValue}
-					rightValue={rightValue}
-					onLeftChange={this.handleLeftChange}
-					onRightChange={this.handleRightChange}
+					leftValue={minutes}
+					onLeftChange={this.handleMinChange}
+					rightValue={seconds}
+					onRightChange={this.handleSecChange}
 				/>
 				<button
 					className={`${classes['btn--inc']} ${classes.btn}`}
