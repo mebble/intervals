@@ -1,9 +1,7 @@
 .Interval {
-	width: 40vw;
-	margin: 0 auto 10px auto;
-	padding: 5px;
+	margin: 0 0 10px 0;
 	display: flex;
-	justify-content: space-evenly;
+	justify-content: space-between;
 }
 .btn--inc {
 	color: blue;
@@ -19,20 +17,4 @@
 	overflow: hidden;
 	white-space: nowrap;
 	text-overflow: ellipsis;
-}
-
-@media screen and (max-width: 1024px) {
-	.Interval {
-		width: 60vw;
-	}
-}
-@media screen and (max-width: 672px) {
-	.Interval {
-		width: 75vw;
-	}
-}
-@media screen and (max-width: 432px) {
-	.Interval {
-		width: 90vw;
-	}
 }
