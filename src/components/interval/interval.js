@@ -77,6 +77,7 @@ class Interval extends React.Component {
 		const { minutes, seconds } = this.state;
 		return (
 			<div className={classes.Interval}>
+				<h3 className={classes.title}>{this.props.title}</h3>
 				<button
 					className={`${classes['btn--dec']} ${classes.btn}`}
 					onClick={this.decrement}
