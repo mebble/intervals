@@ -1,6 +1,25 @@
 .App {
     height: 100vh;
+    width: 40vw;
+    margin: 0 auto;
+
     display: flex;
     flex-direction: column;
     justify-content: center;
+}
+
+@media screen and (max-width: 1024px) {
+	.App {
+		width: 60vw;
+	}
+}
+@media screen and (max-width: 672px) {
+	.App {
+		width: 75vw;
+	}
+}
+@media screen and (max-width: 432px) {
+	.App {
+		width: 90vw;
+	}
 }

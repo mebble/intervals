@@ -12,12 +12,14 @@ class Interval extends React.Component {
 			minutes: 0,  // between 0 and 60
 			seconds: 0,  // between 0 and 59
 		};
+		this.countingId = null;
 
 		this.handleMinChange = this.handleMinChange.bind(this);
 		this.handleSecChange = this.handleSecChange.bind(this);
 		this.increment = this.increment.bind(this);
 		this.decrement = this.decrement.bind(this);
 		this.updateTime = this.updateTime.bind(this);
+		this.countDown = this.countDown.bind(this);
 	}
 
 	handleMinChange(event) {
@@ -73,10 +75,30 @@ class Interval extends React.Component {
 		// console.log(newTotalSecs);
 	}
 
+	countDown() {
+		// console.log(`${this.props.title} counting!`);
+		this.countingId = setInterval(() => {
+			this.decrement();
+			const { totalSeconds } = this.state;
+			if (totalSeconds <= 0) {
+				clearInterval(this.countingId);
+				// console.log(`${this.props.title} done counting!`);
+				this.props.done(this.props.title);
+			}
+		}, 1000);
+	}
+
+	componentWillReceiveProps(nextProps) {
+		if (nextProps.counting) {
+			this.countDown();
+		}
+	}
+
 	render() {
 		const { minutes, seconds } = this.state;
 		return (
 			<div className={classes.Interval}>
+				<h3 className={classes.title}>{this.props.title}</h3>
 				<button
 					className={`${classes['btn--dec']} ${classes.btn}`}
 					onClick={this.decrement}
