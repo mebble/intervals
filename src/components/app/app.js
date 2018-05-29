@@ -9,36 +9,64 @@ class App extends React.Component {
 		super(props);
 		this.state = {
 			intervals: [
-				{ number: 1 },
-				{ number: 2 }
-			]
+				{ counting: false },
+				{ counting: false }
+			],
+			counting: false
 		};
 
 		this.addInterval = this.addInterval.bind(this);
+		this.appCountDown = this.appCountDown.bind(this);
+		this.intervalCountDown = this.intervalCountDown.bind(this);
+		this.intervalDone = this.intervalDone.bind(this);
 	}
 
 	addInterval() {
-		const intervals = this.state.intervals.slice();
-		const lastNum = intervals[intervals.length - 1].number;
-		intervals.push({ number: lastNum + 1 });
+		const intervals = this.state.intervals.map(i => Object.assign({}, i));
+		intervals.push({ counting: false });
 		this.setState({
 			intervals: intervals
 		});
 	}
 
+	appCountDown() {
+		this.setState({ counting: true });
+		this.intervalCountDown(0);
+	}
+
+	intervalCountDown(intervalInd) {
+		const intervals = this.state.intervals.map(i => Object.assign({}, i));
+		intervals[intervalInd].counting = true;
+		this.setState({
+			intervals: intervals
+		});
+	}
+
+	intervalDone(intervalInd) {
+		const intervals = this.state.intervals.map(i => Object.assign({}, i));
+		intervals[intervalInd].counting = false;
+		this.setState({
+			intervals: intervals
+		});
+
+		if (intervalInd < this.state.intervals.length - 1) {
+			this.intervalCountDown(intervalInd + 1);
+		} else {
+			this.setState({ counting: false });
+			// console.log('App done counting!');
+		}
+	}
+
 	render() {
-		const { intervals } = this.state;
+		const { intervals, counting } = this.state;
 		return (
 			<div className={classes.App}>
-				{intervals.map(i => <Interval key={randString()} title={i.number} />)}
-				<button onClick={this.addInterval}>+</button>
+				{intervals.map((interval, i) => <Interval key={i} title={i} done={this.intervalDone} counting={interval.counting} />)}
+				<button onClick={() => !counting && this.addInterval()}>+</button>
+				<button onClick={() => !counting && this.appCountDown()}>Start</button>
 			</div>
 		);
 	}
-}
-
-function randString() {
-	return Math.random().toString(36).slice(2, 7);
 }
 
 export default App;
