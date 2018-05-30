@@ -76,14 +76,14 @@ class Interval extends React.Component {
 	}
 
 	countDown() {
-		// console.log(`${this.props.title} counting!`);
+		// console.log(`${this.props.id} counting!`);
 		this.countingId = setInterval(() => {
 			this.decrement();
 			const { totalSeconds } = this.state;
 			if (totalSeconds <= 0) {
 				clearInterval(this.countingId);
-				// console.log(`${this.props.title} done counting!`);
-				this.props.done(this.props.title);
+				// console.log(`${this.props.id} done counting!`);
+				this.props.done(this.props.id);
 			}
 		}, 1000);
 	}
@@ -94,25 +94,31 @@ class Interval extends React.Component {
 		}
 	}
 
+	componentWillUnmount() {
+		clearInterval(this.countingId);
+	}
+
 	render() {
 		const { minutes, seconds } = this.state;
+		const { appCounting } = this.props;
 		return (
 			<div className={classes.Interval}>
-				<h3 className={classes.title}>{this.props.title}</h3>
+				<h3 className={classes.title}>{this.props.id}</h3>
 				<button
 					className={`${classes['btn--dec']} ${classes.btn}`}
-					onClick={this.decrement}
+					onClick={() => !appCounting && this.decrement()}
 				>-</button>
 				<Input
 					leftValue={pad(minutes)}
-					onLeftChange={this.handleMinChange}
+					onLeftChange={e => !appCounting && this.handleMinChange(e)}
 					rightValue={pad(seconds)}
-					onRightChange={this.handleSecChange}
+					onRightChange={e => !appCounting && this.handleSecChange(e)}
 				/>
 				<button
 					className={`${classes['btn--inc']} ${classes.btn}`}
-					onClick={this.increment}
+					onClick={() => !appCounting && this.increment()}
 				>+</button>
+				<button onClick={() => !appCounting && this.props.onRemove(this.props.id)}>x</button>
 			</div>
 		);
 	}
