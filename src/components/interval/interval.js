@@ -118,6 +118,7 @@ class Interval extends React.Component {
 					className={`${classes['btn--inc']} ${classes.btn}`}
 					onClick={() => !appCounting && this.increment()}
 				>+</button>
+				<button onClick={() => !appCounting && this.props.onCopy(this.props.id)}>cp</button>
 				<button onClick={() => !appCounting && this.props.onRemove(this.props.id)}>x</button>
 			</div>
 		);

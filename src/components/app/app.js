@@ -9,14 +9,15 @@ class App extends React.Component {
 		super(props);
 		this.state = {
 			intervals: [
-				{ id: 0, counting: false },
-				{ id: 1, counting: false }
+				{ id: 0, counting: false }
 			],
 			counting: false
 		};
+		this.intervalCount = 1;  // equals the largest interval id created
 
 		this.addInterval = this.addInterval.bind(this);
 		this.removeInterval = this.removeInterval.bind(this);
+		this.copyInterval = this.copyInterval.bind(this);
 		this.appCountDown = this.appCountDown.bind(this);
 		this.intervalCountDown = this.intervalCountDown.bind(this);
 		this.intervalDone = this.intervalDone.bind(this);
@@ -24,8 +25,10 @@ class App extends React.Component {
 
 	addInterval() {
 		const intervals = this.state.intervals.map(i => Object.assign({}, i));
-		const last = intervals[intervals.length - 1];
-		intervals.push({ id: last.id + 1, counting: false });
+		intervals.push({
+			id: ++this.intervalCount,
+			counting: false
+		});
 		this.setState({
 			intervals: intervals
 		});
@@ -35,6 +38,18 @@ class App extends React.Component {
 		const intervals = this.state.intervals.map(i => Object.assign({}, i));
 		const index = intervals.findIndex(i => i.id === intervalId);
 		intervals.splice(index, 1);
+		this.setState({
+			intervals: intervals
+		});
+	}
+
+	copyInterval(intervalId) {
+		const intervals = this.state.intervals.map(i => Object.assign({}, i));
+		const index = intervals.findIndex(i => i.id === intervalId);
+		intervals.splice(index + 1, 0, {
+			id: ++this.intervalCount,
+			counting: false
+		});
 		this.setState({
 			intervals: intervals
 		});
@@ -75,9 +90,9 @@ class App extends React.Component {
 		const { intervals, counting } = this.state;
 		return (
 			<div className={classes.App}>
-				{intervals.map(i => <Interval key={i.id} id={i.id} appCounting={counting} counting={i.counting} done={this.intervalDone} onRemove={this.removeInterval} />)}
+				{intervals.map(i => <Interval key={i.id} id={i.id} appCounting={counting} counting={i.counting} done={this.intervalDone} onCopy={this.copyInterval} onRemove={this.removeInterval} />)}
 				<button onClick={() => !counting && this.addInterval()}>+</button>
-				<button onClick={() => !counting && this.appCountDown()}>Start</button>
+				<button onClick={() => !counting && intervals.length && this.appCountDown()}>Start</button>
 			</div>
 		);
 	}
