@@ -83,8 +83,13 @@ class Interval extends React.Component {
 		if (!prevProps.counting && this.props.counting) {
 			this.countDown();  // setting state in compDidUpdate. Not a prob if proper conditions are checked
 		}
-		if (this.props.counting && this.props.totalSecs <= 0) {
+		if (prevProps.counting && !this.props.counting) {
+			// will happen when countdown is manually stopped. switch_off -> clearInterval
 			clearInterval(this.countingId);
+			console.log('Clearing', this.props.id);
+		}
+		if (this.props.counting && this.props.totalSecs <= 0) {
+			clearInterval(this.countingId);  // clearInterval -> switch_off
 			this.props.done(this.props.id);
 		}
 	}

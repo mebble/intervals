@@ -7,18 +7,18 @@ import classes from './app.css';
 class App extends React.Component {
 	constructor(props) {
 		super(props);
+		this.intervalCount = 1;  // equals the largest interval id created
+		this.currentInterval = -1;  // index of interval undergoing countdown
 		this.state = {
 			intervals: [
 				{
-					id: 0,
+					id: this.intervalCount,
 					totalSecs: 0,  // between 0 and 3600, mins in [0, 60], secs in [0, 59]
 					counting: false
 				}
 			],
 			counting: false
 		};
-		this.intervalCount = 1;  // equals the largest interval id created
-		this.currentInterval = -1;  // index of interval undergoing countdown
 
 		this.addInterval = this.addInterval.bind(this);
 		this.removeInterval = this.removeInterval.bind(this);
@@ -79,11 +79,24 @@ class App extends React.Component {
 		this.setState({ counting: true });
 	}
 
+	appDone() {
+		this.setState(prevState => {
+			const intervals = prevState.intervals.map(i => Object.assign({}, i));
+			for (const i of intervals) {
+				i.counting = false;  // switch_off
+			}
+			return {
+				counting: false,
+				intervals: intervals
+			};
+		});
+	}
+
 	intervalCountDown(intervalId) {
 		this.setState(prevState => {
 			const intervals = prevState.intervals.map(i => Object.assign({}, i));
 			const interval = intervals.find(i => i.id === intervalId);
-			interval.counting = true;
+			interval.counting = true;  // switch_on
 			return {
 				intervals: intervals
 			};
@@ -95,13 +108,13 @@ class App extends React.Component {
 			const intervals = prevState.intervals.map(i => Object.assign({}, i));
 			const interval = intervals.find(i => i.id === intervalId);
 			const index = intervals.indexOf(interval);
-			interval.counting = false;
+			interval.counting = false;  // switch_off
 			return {
 				intervals: intervals
 			};
 		});
 
-		console.log(this.currentInterval, 'is done', 'Length:', this.state.intervals.length);
+		console.log(this.state.intervals[this.currentInterval].id, 'is done');
 
 		if (this.currentInterval >= this.state.intervals.length - 1) {
 			this.setState({ counting: false });
@@ -128,7 +141,10 @@ class App extends React.Component {
 			<div className={classes.App}>
 				{intervals.map(i => <Interval key={i.id} id={i.id} totalSecs={i.totalSecs} appCounting={counting} counting={i.counting} done={this.intervalDone} onUpdateTime={this.updateIntervalTime} onCopy={this.copyInterval} onRemove={this.removeInterval} />)}
 				<button onClick={() => !counting && this.addInterval()}>+</button>
-				<button onClick={() => !counting && intervals.length && this.appCountDown()}>Start</button>
+				{counting ?
+					<button onClick={() => counting && this.appDone()}>Stop</button> :
+					<button onClick={() => !counting && intervals.length && this.appCountDown()}>Start</button>
+				}
 			</div>
 		);
 	}
