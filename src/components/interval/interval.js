@@ -76,24 +76,16 @@ class Interval extends React.Component {
 	countDown() {
 		this.countingId = setInterval(() => {
 			this.decrement();
-			// decrement -> setState -> render -> componentDidUpdate cycle happens syncronously
-			// Hence, totalSecs is guaranteed to be the updated value
-			const { totalSecs } = this.props;
-			console.log('After dec:', totalSecs);
-			if (totalSecs <= 0) {
-				clearInterval(this.countingId);
-				this.props.done(this.props.id);
-			}
 		}, 1000);
-		if (this.props.totalSecs <= 0) {
-			clearInterval(this.countingId);
-			this.props.done(this.props.id);
-		}
 	}
 
 	componentDidUpdate(prevProps, prevState) {
 		if (!prevProps.counting && this.props.counting) {
 			this.countDown();  // setting state in compDidUpdate. Not a prob if proper conditions are checked
+		}
+		if (this.props.counting && this.props.totalSecs <= 0) {
+			clearInterval(this.countingId);
+			this.props.done(this.props.id);
 		}
 	}
 
