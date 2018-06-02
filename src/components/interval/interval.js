@@ -7,23 +7,29 @@ import classes from './interval.css';
 class Interval extends React.Component {
 	constructor(props) {
 		super(props);
-		this.state = {
-			totalSeconds: 0,  // between 0 and 3600
-			minutes: 0,  // between 0 and 60
-			seconds: 0,  // between 0 and 59
-		};
 		this.countingId = null;
 
+		this.getSeconds = this.getSeconds.bind(this);
+		this.getMinutes = this.getMinutes.bind(this);
 		this.handleMinChange = this.handleMinChange.bind(this);
 		this.handleSecChange = this.handleSecChange.bind(this);
 		this.increment = this.increment.bind(this);
 		this.decrement = this.decrement.bind(this);
-		this.updateTime = this.updateTime.bind(this);
 		this.countDown = this.countDown.bind(this);
 	}
 
+	getSeconds() {
+		const { totalSecs } = this.props;
+		return totalSecs % 60;
+	}
+
+	getMinutes() {
+		const { totalSecs } = this.props;
+		return Math.floor(totalSecs / 60);
+	}
+
 	handleMinChange(event) {
-		const { seconds } = this.state;
+		const seconds = this.getSeconds();
 		const newVal = parseInt(event.target.value, 10);
 		let newMin;
 		if (isNaN(newVal) || newVal < 0) {
@@ -35,11 +41,11 @@ class Interval extends React.Component {
 		}
 
 		const newTotal = newMin * 60 + seconds;
-		this.updateTime(newTotal);
+		this.props.onUpdateTime(this.props.id, newTotal);
 	}
 
 	handleSecChange(event) {
-		const { minutes } = this.state;
+		const minutes = this.getMinutes();
 		const newVal = parseInt(event.target.value, 10);
 		let newSec;
 		if (isNaN(newVal) || newVal < 0) {
@@ -51,46 +57,43 @@ class Interval extends React.Component {
 		}
 
 		const newTotal = minutes * 60 + newSec;
-		this.updateTime(newTotal);
+		this.props.onUpdateTime(this.props.id, newTotal);
 	}
 
 	increment() {
-		const { totalSeconds } = this.state;
-		const newTotal = (totalSeconds + 1) > 3600 ? totalSeconds : totalSeconds + 1;
-		this.updateTime(newTotal);
+		const { totalSecs } = this.props;
+		const newTotal = (totalSecs + 1) > 3600 ? totalSecs : totalSecs + 1;
+		this.props.onUpdateTime(this.props.id, newTotal);
 	}
 
 	decrement() {
-		const { totalSeconds } = this.state;
-		const newTotal = (totalSeconds - 1) < 0 ? 0 : totalSeconds - 1;
-		this.updateTime(newTotal);
-	}
-
-	updateTime(newTotalSecs) {
-		this.setState({
-			totalSeconds: newTotalSecs,
-			minutes:  Math.floor(newTotalSecs / 60),
-			seconds: newTotalSecs % 60
-		});
-		// console.log(newTotalSecs);
+		const { totalSecs } = this.props;
+		console.log('Before dec:', totalSecs);
+		const newTotal = (totalSecs - 1) < 0 ? 0 : totalSecs - 1;
+		this.props.onUpdateTime(this.props.id, newTotal);
 	}
 
 	countDown() {
-		// console.log(`${this.props.id} counting!`);
 		this.countingId = setInterval(() => {
 			this.decrement();
-			const { totalSeconds } = this.state;
-			if (totalSeconds <= 0) {
+			// decrement -> setState -> render -> componentDidUpdate cycle happens syncronously
+			// Hence, totalSecs is guaranteed to be the updated value
+			const { totalSecs } = this.props;
+			console.log('After dec:', totalSecs);
+			if (totalSecs <= 0) {
 				clearInterval(this.countingId);
-				// console.log(`${this.props.id} done counting!`);
 				this.props.done(this.props.id);
 			}
 		}, 1000);
+		if (this.props.totalSecs <= 0) {
+			clearInterval(this.countingId);
+			this.props.done(this.props.id);
+		}
 	}
 
-	componentWillReceiveProps(nextProps) {
-		if (nextProps.counting) {
-			this.countDown();
+	componentDidUpdate(prevProps, prevState) {
+		if (!prevProps.counting && this.props.counting) {
+			this.countDown();  // setting state in compDidUpdate. Not a prob if proper conditions are checked
 		}
 	}
 
@@ -99,7 +102,6 @@ class Interval extends React.Component {
 	}
 
 	render() {
-		const { minutes, seconds } = this.state;
 		const { appCounting } = this.props;
 		return (
 			<div className={classes.Interval}>
@@ -109,9 +111,9 @@ class Interval extends React.Component {
 					onClick={() => !appCounting && this.decrement()}
 				>-</button>
 				<Input
-					leftValue={pad(minutes)}
+					leftValue={pad(this.getMinutes())}
 					onLeftChange={e => !appCounting && this.handleMinChange(e)}
-					rightValue={pad(seconds)}
+					rightValue={pad(this.getSeconds())}
 					onRightChange={e => !appCounting && this.handleSecChange(e)}
 				/>
 				<button

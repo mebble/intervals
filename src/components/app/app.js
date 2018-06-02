@@ -9,15 +9,21 @@ class App extends React.Component {
 		super(props);
 		this.state = {
 			intervals: [
-				{ id: 0, counting: false }
+				{
+					id: 0,
+					totalSecs: 0,  // between 0 and 3600, mins in [0, 60], secs in [0, 59]
+					counting: false
+				}
 			],
 			counting: false
 		};
 		this.intervalCount = 1;  // equals the largest interval id created
+		this.currentInterval = -1;  // index of interval undergoing countdown
 
 		this.addInterval = this.addInterval.bind(this);
 		this.removeInterval = this.removeInterval.bind(this);
 		this.copyInterval = this.copyInterval.bind(this);
+		this.updateIntervalTime = this.updateIntervalTime.bind(this);
 		this.appCountDown = this.appCountDown.bind(this);
 		this.intervalCountDown = this.intervalCountDown.bind(this);
 		this.intervalDone = this.intervalDone.bind(this);
@@ -27,6 +33,7 @@ class App extends React.Component {
 		const intervals = this.state.intervals.map(i => Object.assign({}, i));
 		intervals.push({
 			id: ++this.intervalCount,
+			totalSecs: 0,
 			counting: false
 		});
 		this.setState({
@@ -45,9 +52,11 @@ class App extends React.Component {
 
 	copyInterval(intervalId) {
 		const intervals = this.state.intervals.map(i => Object.assign({}, i));
-		const index = intervals.findIndex(i => i.id === intervalId);
+		const interval = intervals.find(i => i.id === intervalId);
+		const index = intervals.indexOf(interval);
 		intervals.splice(index + 1, 0, {
 			id: ++this.intervalCount,
+			totalSecs: interval.totalSecs,
 			counting: false
 		});
 		this.setState({
@@ -55,34 +64,61 @@ class App extends React.Component {
 		});
 	}
 
+	updateIntervalTime(intervalId, totalSecs) {
+		this.setState(prevState => {
+			const intervals = prevState.intervals.map(i => Object.assign({}, i));
+			const interval = intervals.find(i => i.id === intervalId);
+			interval.totalSecs = totalSecs;
+			return {
+				intervals: intervals
+			};
+		});
+	}
+
 	appCountDown() {
 		this.setState({ counting: true });
-		this.intervalCountDown(this.state.intervals[0].id);
 	}
 
 	intervalCountDown(intervalId) {
-		const intervals = this.state.intervals.map(i => Object.assign({}, i));
-		const interval = intervals.find(i => i.id === intervalId);
-		interval.counting = true;
-		this.setState({
-			intervals: intervals
+		this.setState(prevState => {
+			const intervals = prevState.intervals.map(i => Object.assign({}, i));
+			const interval = intervals.find(i => i.id === intervalId);
+			interval.counting = true;
+			return {
+				intervals: intervals
+			};
 		});
 	}
 
 	intervalDone(intervalId) {
-		const intervals = this.state.intervals.map(i => Object.assign({}, i));
-		const interval = intervals.find(i => i.id === intervalId);
-		const index = intervals.indexOf(interval);
-		interval.counting = false;
-		this.setState({
-			intervals: intervals
+		this.setState(prevState => {
+			const intervals = prevState.intervals.map(i => Object.assign({}, i));
+			const interval = intervals.find(i => i.id === intervalId);
+			const index = intervals.indexOf(interval);
+			interval.counting = false;
+			return {
+				intervals: intervals
+			};
 		});
 
-		if (index < this.state.intervals.length - 1) {
-			this.intervalCountDown(intervals[index + 1].id);
-		} else {
+		console.log(this.currentInterval, 'is done', 'Length:', this.state.intervals.length);
+
+		if (this.currentInterval >= this.state.intervals.length - 1) {
 			this.setState({ counting: false });
-			// console.log('App done counting!');
+			console.log('App is done!');
+		} else {
+			this.intervalCountDown(this.state.intervals[++this.currentInterval].id);
+		}
+	}
+
+	componentDidUpdate(prevProps, prevState) {
+		if (!prevState.counting && this.state.counting) {
+			this.intervalCountDown(this.state.intervals[++this.currentInterval].id);
+			console.log(this.state.intervals.map(i => i.counting));  // expected all false
+		}
+		if (prevState.counting && !this.state.counting) {
+			this.currentInterval = -1;
+			console.log(this.state.intervals.map(i => i.counting));  // expected all false
 		}
 	}
 
@@ -90,7 +126,7 @@ class App extends React.Component {
 		const { intervals, counting } = this.state;
 		return (
 			<div className={classes.App}>
-				{intervals.map(i => <Interval key={i.id} id={i.id} appCounting={counting} counting={i.counting} done={this.intervalDone} onCopy={this.copyInterval} onRemove={this.removeInterval} />)}
+				{intervals.map(i => <Interval key={i.id} id={i.id} totalSecs={i.totalSecs} appCounting={counting} counting={i.counting} done={this.intervalDone} onUpdateTime={this.updateIntervalTime} onCopy={this.copyInterval} onRemove={this.removeInterval} />)}
 				<button onClick={() => !counting && this.addInterval()}>+</button>
 				<button onClick={() => !counting && intervals.length && this.appCountDown()}>Start</button>
 			</div>
