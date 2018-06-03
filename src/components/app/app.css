@@ -7,7 +7,15 @@
     flex-direction: column;
     justify-content: center;
 }
+.App * {
+	font-size: 16px;
+}
 
+@media screen and (max-width: 1440px) {
+	.App {
+		width: 50vw;
+	}
+}
 @media screen and (max-width: 1024px) {
 	.App {
 		width: 60vw;
@@ -17,9 +25,28 @@
 	.App {
 		width: 75vw;
 	}
+	.App * {
+		font-size: 12px;
+	}
 }
 @media screen and (max-width: 432px) {
 	.App {
 		width: 90vw;
 	}
+}
+
+.button {
+	border: none;
+	border-radius: 5px;
+	background-color: bisque;
+}
+.button:hover {
+	box-shadow: 0 1px 1px 0 rgb(235, 235, 235);
+}
+
+.btn-add,
+.btn-start,
+.btn-stop {
+	margin: 0 0 10px 0;
+	padding: 10px 0;
 }

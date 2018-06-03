@@ -2,9 +2,10 @@
 	display: flex;
 	justify-content: center
 }
-.field {
+.Input__field {
 	width: 48%;
 }
-.separator {
+.Input__separator {
 	width: 2%;
+	text-align: center;
 }

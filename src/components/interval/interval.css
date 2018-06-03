@@ -1,20 +1,22 @@
 .Interval {
-	margin: 0 0 10px 0;
 	display: flex;
 	justify-content: space-between;
 }
-.btn--inc {
-	color: blue;
+.Interval__elem {
+	padding-top: 5px;
+	padding-bottom: 5px;
+	margin-left: 5px;
+	margin-right: 5px;
 }
-.btn--dec {
-	color: red;
-}
-.title {
-	margin: 0;
-	width: 10%;
+.Interval__title {
 	text-align: center;
 
 	overflow: hidden;
 	white-space: nowrap;
 	text-overflow: ellipsis;
+}
+
+.btn-input {
+	padding-left: 10px;
+	padding-right: 10px;
 }

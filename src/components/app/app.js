@@ -1,8 +1,10 @@
 import React from 'react';
 
+import Section from '../section/section';
 import Interval from '../interval/interval';
 
-import classes from './app.css';
+import './reset.css';
+import './app.css';
 
 class App extends React.Component {
 	constructor(props) {
@@ -138,12 +140,24 @@ class App extends React.Component {
 	render() {
 		const { intervals, counting } = this.state;
 		return (
-			<div className={classes.App}>
-				{intervals.map(i => <Interval key={i.id} id={i.id} totalSecs={i.totalSecs} appCounting={counting} counting={i.counting} done={this.intervalDone} onUpdateTime={this.updateIntervalTime} onCopy={this.copyInterval} onRemove={this.removeInterval} />)}
-				<button onClick={() => !counting && this.addInterval()}>+</button>
+			<div className="App">
+				{intervals.map(i => (
+					<Section key={i.id}>
+						<Interval
+							id={i.id}
+							totalSecs={i.totalSecs}
+							appCounting={counting}
+							counting={i.counting}
+							done={this.intervalDone}
+							onUpdateTime={this.updateIntervalTime}
+							onCopy={this.copyInterval}
+							onRemove={this.removeInterval} />
+					</Section>
+				))}
+				<button className="button btn-add" onClick={() => !counting && this.addInterval()}>+</button>
 				{counting ?
-					<button onClick={() => counting && this.appDone()}>Stop</button> :
-					<button onClick={() => !counting && intervals.length && this.appCountDown()}>Start</button>
+					<button className="button btn-stop" onClick={() => counting && this.appDone()}>Stop</button> :
+					<button className="button btn-start" onClick={() => !counting && intervals.length && this.appCountDown()}>Start</button>
 				}
 			</div>
 		);

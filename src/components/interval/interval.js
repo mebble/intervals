@@ -2,7 +2,7 @@ import React from 'react';
 
 import Input from './input/input';
 
-import classes from './interval.css';
+import './interval.css';
 
 class Interval extends React.Component {
 	constructor(props) {
@@ -99,26 +99,28 @@ class Interval extends React.Component {
 	}
 
 	render() {
-		const { appCounting } = this.props;
+		const { appCounting, id } = this.props;
+		const { onCopy, onRemove } = this.props;
 		return (
-			<div className={classes.Interval}>
-				<h3 className={classes.title}>{this.props.id}</h3>
+			<div className="Interval">
+				<h3 className="Interval__elem Interval__title">{id}</h3>
 				<button
-					className={`${classes['btn--dec']} ${classes.btn}`}
+					className="Interval__elem button btn-input btn-input--dec"
 					onClick={() => !appCounting && this.decrement()}
 				>-</button>
 				<Input
+					className="Interval__elem"
 					leftValue={pad(this.getMinutes())}
 					onLeftChange={e => !appCounting && this.handleMinChange(e)}
 					rightValue={pad(this.getSeconds())}
 					onRightChange={e => !appCounting && this.handleSecChange(e)}
 				/>
 				<button
-					className={`${classes['btn--inc']} ${classes.btn}`}
+					className="Interval__elem button btn-input btn-input--inc"
 					onClick={() => !appCounting && this.increment()}
 				>+</button>
-				<button onClick={() => !appCounting && this.props.onCopy(this.props.id)}>cp</button>
-				<button onClick={() => !appCounting && this.props.onRemove(this.props.id)}>x</button>
+				<button className="Interval__elem button btn-input" onClick={() => !appCounting && onCopy(id)}>cp</button>
+				<button className="Interval__elem button btn-input" onClick={() => !appCounting && onRemove(id)}>x</button>
 			</div>
 		);
 	}
