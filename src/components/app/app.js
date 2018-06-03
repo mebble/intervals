@@ -1,4 +1,5 @@
 import React from 'react';
+import classnames from 'classnames';
 
 import Section from '../section/section';
 import Interval from '../interval/interval';
@@ -139,6 +140,7 @@ class App extends React.Component {
 
 	render() {
 		const { intervals, counting } = this.state;
+
 		return (
 			<div className="App">
 				{intervals.map(i => (
@@ -154,10 +156,18 @@ class App extends React.Component {
 							onRemove={this.removeInterval} />
 					</Section>
 				))}
-				<button className="button btn-add" onClick={() => !counting && this.addInterval()}>+</button>
+				<button
+					className={classnames('button', 'btn-app', { 'btn-app--counting': counting })}
+					onClick={() => !counting && this.addInterval()}
+					disabled={counting}>+</button>
 				{counting ?
-					<button className="button btn-stop" onClick={() => counting && this.appDone()}>Stop</button> :
-					<button className="button btn-start" onClick={() => !counting && intervals.length && this.appCountDown()}>Start</button>
+					<button
+						className={classnames('button', 'btn-app', 'btn-app--counting')}
+						onClick={() => counting && this.appDone()}>Stop</button> :
+					<button
+						className={classnames('button', 'btn-app')}
+						onClick={() => !counting && intervals.length && this.appCountDown()}
+						disabled={counting}>Start</button>
 				}
 			</div>
 		);

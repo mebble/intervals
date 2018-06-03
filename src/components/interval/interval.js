@@ -101,12 +101,14 @@ class Interval extends React.Component {
 	render() {
 		const { appCounting, id } = this.props;
 		const { onCopy, onRemove } = this.props;
+
 		return (
 			<div className="Interval">
 				<h3 className="Interval__elem Interval__title">{id}</h3>
 				<button
-					className="Interval__elem button btn-input btn-input--dec"
+					className="Interval__elem button btn-input"
 					onClick={() => !appCounting && this.decrement()}
+					disabled={appCounting}
 				>-</button>
 				<Input
 					className="Interval__elem"
@@ -116,11 +118,12 @@ class Interval extends React.Component {
 					onRightChange={e => !appCounting && this.handleSecChange(e)}
 				/>
 				<button
-					className="Interval__elem button btn-input btn-input--inc"
+					className="Interval__elem button btn-input"
 					onClick={() => !appCounting && this.increment()}
+					disabled={appCounting}
 				>+</button>
-				<button className="Interval__elem button btn-input" onClick={() => !appCounting && onCopy(id)}>cp</button>
-				<button className="Interval__elem button btn-input" onClick={() => !appCounting && onRemove(id)}>x</button>
+				<button className="Interval__elem button btn-input" onClick={() => !appCounting && onCopy(id)} disabled={appCounting}>cp</button>
+				<button className="Interval__elem button btn-input" onClick={() => !appCounting && onRemove(id)} disabled={appCounting}>x</button>
 			</div>
 		);
 	}

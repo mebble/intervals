@@ -44,9 +44,10 @@
 	box-shadow: 0 1px 1px 0 rgb(235, 235, 235);
 }
 
-.btn-add,
-.btn-start,
-.btn-stop {
+.btn-app {
 	margin: 0 0 10px 0;
 	padding: 10px 0;
+}
+.btn-app--counting {
+	background-color: #fb8383;
 }
