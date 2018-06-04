@@ -14,6 +14,7 @@ class App extends React.Component {
 		super(props);
 		this.intervalCount = 1;  // equals the largest interval id created
 		this.currentInterval = -1;  // index of interval undergoing countdown
+		this.ring = null;
 		this.state = {
 			intervals: [
 				{
@@ -30,6 +31,7 @@ class App extends React.Component {
 		this.copyInterval = this.copyInterval.bind(this);
 		this.updateIntervalTime = this.updateIntervalTime.bind(this);
 		this.appCountDown = this.appCountDown.bind(this);
+		this.appStopped = this.appStopped.bind(this);
 		this.intervalCountDown = this.intervalCountDown.bind(this);
 		this.intervalDone = this.intervalDone.bind(this);
 	}
@@ -84,7 +86,7 @@ class App extends React.Component {
 		this.setState({ counting: true });
 	}
 
-	appDone() {
+	appStopped() {
 		this.setState(prevState => {
 			const intervals = prevState.intervals.map(i => Object.assign({}, i));
 			for (const i of intervals) {
@@ -123,6 +125,7 @@ class App extends React.Component {
 
 		if (this.currentInterval >= this.state.intervals.length - 1) {
 			this.setState({ counting: false });
+			this.ring.play();
 			console.log('App is done!');
 		} else {
 			this.intervalCountDown(this.state.intervals[++this.currentInterval].id);
@@ -138,6 +141,10 @@ class App extends React.Component {
 			this.currentInterval = -1;
 			console.log(this.state.intervals.map(i => i.counting));  // expected all false
 		}
+	}
+
+	componentDidMount() {
+		this.ring = new Audio('./dist/ring.mp3');
 	}
 
 	render() {
@@ -167,7 +174,7 @@ class App extends React.Component {
 				{counting ?
 					<button
 						className={classnames('button', 'btn-app', 'btn-app--counting')}
-						onClick={() => counting && this.appDone()}>
+						onClick={() => counting && this.appStopped()}>
 						<Icon icon={ICONS.STOP} />
 					</button> :
 					<button
