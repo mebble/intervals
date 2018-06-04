@@ -116,7 +116,6 @@ class Interval extends React.Component {
 					<Icon appCounting={appCounting} icon={ICONS.MINUS} />
 				</button>
 				<Input
-					className="Interval__elem"
 					leftValue={pad(this.getMinutes())}
 					onLeftChange={e => !appCounting && this.handleMinChange(e)}
 					rightValue={pad(this.getSeconds())}
