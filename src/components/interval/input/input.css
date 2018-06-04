@@ -2,9 +2,14 @@
 	display: flex;
 	justify-content: center
 }
-.field {
+.Input__field {
 	width: 48%;
+	border: 1px solid #d2d2d2;
+	border-radius: 5px;
+	padding: 5px;
+	text-align: center;
 }
-.separator {
+.Input__separator {
 	width: 2%;
+	text-align: center;
 }

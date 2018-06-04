@@ -1,20 +1,22 @@
 .Interval {
-	margin: 0 0 10px 0;
 	display: flex;
 	justify-content: space-between;
 }
-.btn--inc {
-	color: blue;
+.Interval__elem {
+	padding-top: 5px;
+	padding-bottom: 5px;
+	margin-left: 5px;
+	margin-right: 5px;
 }
-.btn--dec {
-	color: red;
+.Interval__title::before {
+	/* Center the svg icon child */
+	content: "";
+	display: inline-block;
+	vertical-align: middle;
+	height: 100%;
 }
-.title {
-	margin: 0;
-	width: 10%;
-	text-align: center;
 
-	overflow: hidden;
-	white-space: nowrap;
-	text-overflow: ellipsis;
+.btn-input {
+	padding-left: 10px;
+	padding-right: 10px;
 }

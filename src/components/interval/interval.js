@@ -1,29 +1,37 @@
 import React from 'react';
 
 import Input from './input/input';
+import Icon from '../icon/icon';
+import { ICONS } from '../constants';
 
-import classes from './interval.css';
+import './interval.css';
 
 class Interval extends React.Component {
 	constructor(props) {
 		super(props);
-		this.state = {
-			totalSeconds: 0,  // between 0 and 3600
-			minutes: 0,  // between 0 and 60
-			seconds: 0,  // between 0 and 59
-		};
 		this.countingId = null;
 
+		this.getSeconds = this.getSeconds.bind(this);
+		this.getMinutes = this.getMinutes.bind(this);
 		this.handleMinChange = this.handleMinChange.bind(this);
 		this.handleSecChange = this.handleSecChange.bind(this);
 		this.increment = this.increment.bind(this);
 		this.decrement = this.decrement.bind(this);
-		this.updateTime = this.updateTime.bind(this);
 		this.countDown = this.countDown.bind(this);
 	}
 
+	getSeconds() {
+		const { totalSecs } = this.props;
+		return totalSecs % 60;
+	}
+
+	getMinutes() {
+		const { totalSecs } = this.props;
+		return Math.floor(totalSecs / 60);
+	}
+
 	handleMinChange(event) {
-		const { seconds } = this.state;
+		const seconds = this.getSeconds();
 		const newVal = parseInt(event.target.value, 10);
 		let newMin;
 		if (isNaN(newVal) || newVal < 0) {
@@ -35,11 +43,11 @@ class Interval extends React.Component {
 		}
 
 		const newTotal = newMin * 60 + seconds;
-		this.updateTime(newTotal);
+		this.props.onUpdateTime(this.props.id, newTotal);
 	}
 
 	handleSecChange(event) {
-		const { minutes } = this.state;
+		const minutes = this.getMinutes();
 		const newVal = parseInt(event.target.value, 10);
 		let newSec;
 		if (isNaN(newVal) || newVal < 0) {
@@ -51,68 +59,80 @@ class Interval extends React.Component {
 		}
 
 		const newTotal = minutes * 60 + newSec;
-		this.updateTime(newTotal);
+		this.props.onUpdateTime(this.props.id, newTotal);
 	}
 
 	increment() {
-		const { totalSeconds } = this.state;
-		const newTotal = (totalSeconds + 1) > 3600 ? totalSeconds : totalSeconds + 1;
-		this.updateTime(newTotal);
+		const { totalSecs } = this.props;
+		const newTotal = (totalSecs + 1) > 3600 ? totalSecs : totalSecs + 1;
+		this.props.onUpdateTime(this.props.id, newTotal);
 	}
 
 	decrement() {
-		const { totalSeconds } = this.state;
-		const newTotal = (totalSeconds - 1) < 0 ? 0 : totalSeconds - 1;
-		this.updateTime(newTotal);
-	}
-
-	updateTime(newTotalSecs) {
-		this.setState({
-			totalSeconds: newTotalSecs,
-			minutes:  Math.floor(newTotalSecs / 60),
-			seconds: newTotalSecs % 60
-		});
-		// console.log(newTotalSecs);
+		const { totalSecs } = this.props;
+		console.log('Before dec:', totalSecs);
+		const newTotal = (totalSecs - 1) < 0 ? 0 : totalSecs - 1;
+		this.props.onUpdateTime(this.props.id, newTotal);
 	}
 
 	countDown() {
-		// console.log(`${this.props.title} counting!`);
 		this.countingId = setInterval(() => {
 			this.decrement();
-			const { totalSeconds } = this.state;
-			if (totalSeconds <= 0) {
-				clearInterval(this.countingId);
-				// console.log(`${this.props.title} done counting!`);
-				this.props.done(this.props.title);
-			}
 		}, 1000);
 	}
 
-	componentWillReceiveProps(nextProps) {
-		if (nextProps.counting) {
-			this.countDown();
+	componentDidUpdate(prevProps, prevState) {
+		if (!prevProps.counting && this.props.counting) {
+			this.countDown();  // setting state in compDidUpdate. Not a prob if proper conditions are checked
+		}
+		if (prevProps.counting && !this.props.counting) {
+			// will happen when countdown is manually stopped. switch_off -> clearInterval
+			clearInterval(this.countingId);
+			console.log('Clearing', this.props.id);
+		}
+		if (this.props.counting && this.props.totalSecs <= 0) {
+			clearInterval(this.countingId);  // clearInterval -> switch_off
+			this.props.done(this.props.id);
 		}
 	}
 
+	componentWillUnmount() {
+		clearInterval(this.countingId);
+	}
+
 	render() {
-		const { minutes, seconds } = this.state;
+		const { appCounting, counting, id } = this.props;
+		const { onCopy, onRemove } = this.props;
+
 		return (
-			<div className={classes.Interval}>
-				<h3 className={classes.title}>{this.props.title}</h3>
+			<div className="Interval">
+				<span className="Interval__elem Interval__title">
+					<Icon appCounting={appCounting} intervalCounting={counting} icon={ICONS.MARK} />
+				</span>
 				<button
-					className={`${classes['btn--dec']} ${classes.btn}`}
-					onClick={this.decrement}
-				>-</button>
+					className="Interval__elem button btn-input"
+					onClick={() => !appCounting && this.decrement()}
+					disabled={appCounting}>
+					<Icon appCounting={appCounting} icon={ICONS.MINUS} />
+				</button>
 				<Input
-					leftValue={pad(minutes)}
-					onLeftChange={this.handleMinChange}
-					rightValue={pad(seconds)}
-					onRightChange={this.handleSecChange}
+					leftValue={pad(this.getMinutes())}
+					onLeftChange={e => !appCounting && this.handleMinChange(e)}
+					rightValue={pad(this.getSeconds())}
+					onRightChange={e => !appCounting && this.handleSecChange(e)}
 				/>
 				<button
-					className={`${classes['btn--inc']} ${classes.btn}`}
-					onClick={this.increment}
-				>+</button>
+					className="Interval__elem button btn-input"
+					onClick={() => !appCounting && this.increment()}
+					disabled={appCounting}>
+					<Icon appCounting={appCounting} icon={ICONS.PLUS} />
+				</button>
+				<button className="Interval__elem button btn-input" onClick={() => !appCounting && onCopy(id)} disabled={appCounting}>
+					<Icon appCounting={appCounting} icon={ICONS.COPY} />
+				</button>
+				<button className="Interval__elem button btn-input" onClick={() => !appCounting && onRemove(id)} disabled={appCounting}>
+					<Icon appCounting={appCounting} icon={ICONS.TRASH} />
+				</button>
 			</div>
 		);
 	}
