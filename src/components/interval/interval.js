@@ -1,6 +1,8 @@
 import React from 'react';
 
 import Input from './input/input';
+import Icon from '../icon/icon';
+import { ICONS } from '../constants';
 
 import './interval.css';
 
@@ -99,17 +101,20 @@ class Interval extends React.Component {
 	}
 
 	render() {
-		const { appCounting, id } = this.props;
+		const { appCounting, counting, id } = this.props;
 		const { onCopy, onRemove } = this.props;
 
 		return (
 			<div className="Interval">
-				<h3 className="Interval__elem Interval__title">{id}</h3>
+				<span className="Interval__elem Interval__title">
+					<Icon appCounting={appCounting} intervalCounting={counting} icon={ICONS.MARK} />
+				</span>
 				<button
 					className="Interval__elem button btn-input"
 					onClick={() => !appCounting && this.decrement()}
-					disabled={appCounting}
-				>-</button>
+					disabled={appCounting}>
+					<Icon appCounting={appCounting} icon={ICONS.MINUS} />
+				</button>
 				<Input
 					className="Interval__elem"
 					leftValue={pad(this.getMinutes())}
@@ -120,10 +125,15 @@ class Interval extends React.Component {
 				<button
 					className="Interval__elem button btn-input"
 					onClick={() => !appCounting && this.increment()}
-					disabled={appCounting}
-				>+</button>
-				<button className="Interval__elem button btn-input" onClick={() => !appCounting && onCopy(id)} disabled={appCounting}>cp</button>
-				<button className="Interval__elem button btn-input" onClick={() => !appCounting && onRemove(id)} disabled={appCounting}>x</button>
+					disabled={appCounting}>
+					<Icon appCounting={appCounting} icon={ICONS.PLUS} />
+				</button>
+				<button className="Interval__elem button btn-input" onClick={() => !appCounting && onCopy(id)} disabled={appCounting}>
+					<Icon appCounting={appCounting} icon={ICONS.COPY} />
+				</button>
+				<button className="Interval__elem button btn-input" onClick={() => !appCounting && onRemove(id)} disabled={appCounting}>
+					<Icon appCounting={appCounting} icon={ICONS.TRASH} />
+				</button>
 			</div>
 		);
 	}

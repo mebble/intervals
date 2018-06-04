@@ -3,6 +3,8 @@ import classnames from 'classnames';
 
 import Section from '../section/section';
 import Interval from '../interval/interval';
+import Icon from '../icon/icon';
+import { ICONS } from '../constants';
 
 import './reset.css';
 import './app.css';
@@ -159,15 +161,21 @@ class App extends React.Component {
 				<button
 					className={classnames('button', 'btn-app', { 'btn-app--counting': counting })}
 					onClick={() => !counting && this.addInterval()}
-					disabled={counting}>+</button>
+					disabled={counting}>
+					<Icon appCounting={counting} icon={ICONS.PLUS} />
+				</button>
 				{counting ?
 					<button
 						className={classnames('button', 'btn-app', 'btn-app--counting')}
-						onClick={() => counting && this.appDone()}>Stop</button> :
+						onClick={() => counting && this.appDone()}>
+						<Icon icon={ICONS.STOP} />
+					</button> :
 					<button
 						className={classnames('button', 'btn-app')}
 						onClick={() => !counting && intervals.length && this.appCountDown()}
-						disabled={counting}>Start</button>
+						disabled={counting}>
+						<Icon icon={ICONS.PLAY} />
+					</button>
 				}
 			</div>
 		);

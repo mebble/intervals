@@ -8,12 +8,12 @@
 	margin-left: 5px;
 	margin-right: 5px;
 }
-.Interval__title {
-	text-align: center;
-
-	overflow: hidden;
-	white-space: nowrap;
-	text-overflow: ellipsis;
+.Interval__title::before {
+	/* Center the svg icon child */
+	content: "";
+	display: inline-block;
+	vertical-align: middle;
+	height: 100%;
 }
 
 .btn-input {
