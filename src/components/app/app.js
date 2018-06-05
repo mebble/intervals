@@ -1,20 +1,22 @@
 import React from 'react';
 import classnames from 'classnames';
 
+import Ring from '../../util/ring';
 import Section from '../section/section';
 import Interval from '../interval/interval';
 import Icon from '../icon/icon';
-import { ICONS } from '../constants';
+import { ICONS } from '../../constants';
 
-import './reset.css';
 import './app.css';
+
+const audioContext = new (window.AudioContext || window.webkitAudioContext)();
 
 class App extends React.Component {
 	constructor(props) {
 		super(props);
 		this.intervalCount = 1;  // equals the largest interval id created
 		this.currentInterval = -1;  // index of interval undergoing countdown
-		this.ring = null;
+		this.ring = new Ring(audioContext);
 		this.state = {
 			intervals: [
 				{
@@ -125,26 +127,24 @@ class App extends React.Component {
 
 		if (this.currentInterval >= this.state.intervals.length - 1) {
 			this.setState({ counting: false });
-			this.ring.play();
+			this.ring.play(587.33, 2, 0.3);
 			console.log('App is done!');
 		} else {
 			this.intervalCountDown(this.state.intervals[++this.currentInterval].id);
+			this.ring.play(440, 2, 0.1);
 		}
 	}
 
 	componentDidUpdate(prevProps, prevState) {
 		if (!prevState.counting && this.state.counting) {
 			this.intervalCountDown(this.state.intervals[++this.currentInterval].id);
+			this.ring.play(698.46, 1, 0.1);
 			console.log(this.state.intervals.map(i => i.counting));  // expected all false
 		}
 		if (prevState.counting && !this.state.counting) {
 			this.currentInterval = -1;
 			console.log(this.state.intervals.map(i => i.counting));  // expected all false
 		}
-	}
-
-	componentDidMount() {
-		this.ring = new Audio('./ring.mp3');
 	}
 
 	render() {
