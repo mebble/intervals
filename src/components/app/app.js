@@ -1,20 +1,22 @@
 import React from 'react';
 import classnames from 'classnames';
 
+import Ring from '../../util/ring';
 import Section from '../section/section';
 import Interval from '../interval/interval';
 import Icon from '../icon/icon';
-import { ICONS } from '../constants';
+import { ICONS } from '../../constants';
 
-import './reset.css';
 import './app.css';
+
+const audioContext = new (window.AudioContext || window.webkitAudioContext)();
 
 class App extends React.Component {
 	constructor(props) {
 		super(props);
 		this.intervalCount = 1;  // equals the largest interval id created
 		this.currentInterval = -1;  // index of interval undergoing countdown
-		this.ring = null;
+		this.ring = new Ring(audioContext);
 		this.state = {
 			intervals: [
 				{
@@ -23,7 +25,7 @@ class App extends React.Component {
 					counting: false
 				}
 			],
-			counting: false
+			counting: false,
 		};
 
 		this.addInterval = this.addInterval.bind(this);
@@ -32,8 +34,10 @@ class App extends React.Component {
 		this.updateIntervalTime = this.updateIntervalTime.bind(this);
 		this.appCountDown = this.appCountDown.bind(this);
 		this.appStopped = this.appStopped.bind(this);
+		this.appDone = this.appDone.bind(this);
 		this.intervalCountDown = this.intervalCountDown.bind(this);
 		this.intervalDone = this.intervalDone.bind(this);
+		this.getNonZeroInterval = this.getNonZeroInterval.bind(this);
 	}
 
 	addInterval() {
@@ -71,19 +75,13 @@ class App extends React.Component {
 		});
 	}
 
-	updateIntervalTime(intervalId, totalSecs) {
-		this.setState(prevState => {
-			const intervals = prevState.intervals.map(i => Object.assign({}, i));
-			const interval = intervals.find(i => i.id === intervalId);
-			interval.totalSecs = totalSecs;
-			return {
-				intervals: intervals
-			};
-		});
-	}
-
 	appCountDown() {
+		const { intervals } = this.state;
+
+		if (!intervals.some(i => i.totalSecs > 0)) return;
+
 		this.setState({ counting: true });
+		this.ring.play(698.46, 1, 0.1);
 	}
 
 	appStopped() {
@@ -99,11 +97,27 @@ class App extends React.Component {
 		});
 	}
 
-	intervalCountDown(intervalId) {
+	appDone() {
+		this.ring.play(587.33, 2, 0.3);
+		this.setState({ counting: false });
+		console.log('App is done!');
+	}
+
+	intervalCountDown(index) {
+		this.setState(prevState => {
+			const intervals = prevState.intervals.map(i => Object.assign({}, i));
+			intervals[index].counting = true;  // switch_on
+			return {
+				intervals: intervals
+			};
+		});
+	}
+
+	updateIntervalTime(intervalId, totalSecs) {
 		this.setState(prevState => {
 			const intervals = prevState.intervals.map(i => Object.assign({}, i));
 			const interval = intervals.find(i => i.id === intervalId);
-			interval.counting = true;  // switch_on
+			interval.totalSecs = totalSecs;
 			return {
 				intervals: intervals
 			};
@@ -114,7 +128,6 @@ class App extends React.Component {
 		this.setState(prevState => {
 			const intervals = prevState.intervals.map(i => Object.assign({}, i));
 			const interval = intervals.find(i => i.id === intervalId);
-			const index = intervals.indexOf(interval);
 			interval.counting = false;  // switch_off
 			return {
 				intervals: intervals
@@ -123,28 +136,44 @@ class App extends React.Component {
 
 		console.log(this.state.intervals[this.currentInterval].id, 'is done');
 
-		if (this.currentInterval >= this.state.intervals.length - 1) {
-			this.setState({ counting: false });
-			this.ring.play();
-			console.log('App is done!');
+		this.currentInterval = this.getNonZeroInterval(this.state, this.currentInterval + 1);  // won't get updated 'interval counting' state, but updated totalSeconds
+		if (this.currentInterval === -1) {
+			this.appDone();
 		} else {
-			this.intervalCountDown(this.state.intervals[++this.currentInterval].id);
+			this.ring.play(440, 2, 0.1);
+			this.intervalCountDown(this.currentInterval);
 		}
+	}
+
+	getNonZeroInterval(state, index) {
+		/**
+		 * Return the index of first non zero interval at or after that at 'index'
+		 */
+		const { intervals } = state;
+		while (index < intervals.length) {
+			if (intervals[index].totalSecs <= 0) {
+				index++;
+			} else {
+				return index;
+			}
+		}
+		return -1;
 	}
 
 	componentDidUpdate(prevProps, prevState) {
 		if (!prevState.counting && this.state.counting) {
-			this.intervalCountDown(this.state.intervals[++this.currentInterval].id);
+			this.currentInterval = this.getNonZeroInterval(this.state, this.currentInterval + 1);
+			if (this.currentInterval === -1) {
+				this.appDone();
+				return;
+			}
+			this.intervalCountDown(this.currentInterval);
 			console.log(this.state.intervals.map(i => i.counting));  // expected all false
 		}
 		if (prevState.counting && !this.state.counting) {
 			this.currentInterval = -1;
 			console.log(this.state.intervals.map(i => i.counting));  // expected all false
 		}
-	}
-
-	componentDidMount() {
-		this.ring = new Audio('./dist/ring.mp3');
 	}
 
 	render() {

@@ -2,7 +2,7 @@ import React from 'react';
 
 import Input from './input/input';
 import Icon from '../icon/icon';
-import { ICONS } from '../constants';
+import { ICONS } from '../../constants';
 
 import './interval.css';
 
