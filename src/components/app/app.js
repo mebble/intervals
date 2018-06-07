@@ -1,13 +1,14 @@
 import React from 'react';
 import classnames from 'classnames';
 
+import './app.css';
+
 import Ring from '../../util/ring';
+import Header from '../header/header';
 import Section from '../section/section';
 import Interval from '../interval/interval';
 import Icon from '../icon/icon';
 import { ICONS } from '../../constants';
-
-import './app.css';
 
 const audioContext = new (window.AudioContext || window.webkitAudioContext)();
 
@@ -181,6 +182,9 @@ class App extends React.Component {
 
 		return (
 			<div className="App">
+				<Section>
+					<Header title="Intervals" />
+				</Section>
 				{intervals.map(i => (
 					<Section key={i.id}>
 						<Interval
@@ -194,25 +198,29 @@ class App extends React.Component {
 							onRemove={this.removeInterval} />
 					</Section>
 				))}
-				<button
-					className={classnames('button', 'btn-app', { 'btn-app--counting': counting })}
-					onClick={() => !counting && this.addInterval()}
-					disabled={counting}>
-					<Icon appCounting={counting} icon={ICONS.PLUS} />
-				</button>
-				{counting ?
+				<Section>
 					<button
-						className={classnames('button', 'btn-app', 'btn-app--counting')}
-						onClick={() => counting && this.appStopped()}>
-						<Icon icon={ICONS.STOP} />
-					</button> :
-					<button
-						className={classnames('button', 'btn-app')}
-						onClick={() => !counting && intervals.length && this.appCountDown()}
+						className={classnames('button', 'btn-app', { 'btn-app--counting': counting })}
+						onClick={() => !counting && this.addInterval()}
 						disabled={counting}>
-						<Icon icon={ICONS.PLAY} />
+						<Icon appCounting={counting} icon={ICONS.PLUS} />
 					</button>
-				}
+				</Section>
+				<Section>
+					{counting ?
+						<button
+							className={classnames('button', 'btn-app', 'btn-app--counting')}
+							onClick={() => counting && this.appStopped()}>
+							<Icon icon={ICONS.STOP} />
+						</button> :
+						<button
+							className={classnames('button', 'btn-app')}
+							onClick={() => !counting && intervals.length && this.appCountDown()}
+							disabled={counting}>
+							<Icon icon={ICONS.PLAY} />
+						</button>
+					}
+				</Section>
 			</div>
 		);
 	}

@@ -1,0 +1,9 @@
+.Header {
+    text-align: center;
+}
+
+.Header__title {
+    font-size: 2.5rem;
+    font-family: 'Passion One', cursive;
+    letter-spacing: 0.2rem;
+}

@@ -44,9 +44,9 @@
 }
 
 .btn-app {
-	margin: 0 0 10px 0;
-	padding: 10px 0;
+	width: 100%;
+	height: 30px;
 }
 .btn-app--counting {
-	background-color: #fb8383;
+	/* background-color: #fb8383; */
 }

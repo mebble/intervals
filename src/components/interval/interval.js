@@ -1,10 +1,10 @@
 import React from 'react';
 
+import './interval.css';
+
 import Input from './input/input';
 import Icon from '../icon/icon';
 import { ICONS } from '../../constants';
-
-import './interval.css';
 
 class Interval extends React.Component {
 	constructor(props) {
