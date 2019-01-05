@@ -12,7 +12,11 @@ import Interval from '../interval/interval';
 import Icon from '../icon/icon';
 import { ICONS, NOTES } from '../../constants';
 
-const DragHandle = sortableHandle(() => <Icon icon={ICONS.DRAG} />);
+const DragHandle = sortableHandle(() => (
+	<span className="Interval__elem Interval__title">
+		<Icon icon={ICONS.DRAG} />
+	</span>
+));
 const SortableInterval = sortableElement(({ value }) => (
 	<Section>
 		<Interval dragHandle={DragHandle} {...value}/>

@@ -84,12 +84,12 @@ class Interval extends React.Component {
 
 		return (
 			<div className={intervalClass}>
-				<span className="Interval__elem Interval__title">
-					{appCounting ?
-						<Icon appCounting={appCounting} intervalCounting={counting} icon={ICONS.MARK} /> :
-						<DragHandle />
-					}
-				</span>
+				{appCounting ?
+					<span className="Interval__elem Interval__title">
+						<Icon appCounting={appCounting} intervalCounting={counting} icon={ICONS.MARK} />
+					</span> :
+					<DragHandle />
+				}
 				<button
 					className="Interval__elem button btn-input"
 					onClick={() => this.decrement()}
