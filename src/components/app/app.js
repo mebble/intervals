@@ -12,14 +12,14 @@ import Interval from '../interval/interval';
 import Icon from '../icon/icon';
 import { ICONS, NOTES } from '../../constants';
 
-const DragHandle = sortableHandle(() => <span>::</span>);
+const DragHandle = sortableHandle(() => <Icon icon={ICONS.DRAG} />);
 const SortableInterval = sortableElement(({ value }) => (
 	<Section>
 		<Interval dragHandle={DragHandle} {...value}/>
 	</Section>
 ));
 const SortableIntervalContainer = sortableContainer(({ children }) => (
-	<ul>{children}</ul>
+	<ul className="IntervalContainer">{children}</ul>
 ));
 
 class App extends React.Component {
@@ -213,7 +213,7 @@ class App extends React.Component {
 				<Section>
 					<Header title="Intervals" />
 				</Section>
-				<SortableIntervalContainer onSortEnd={this.onSortEnd} useDragHandle>
+				<SortableIntervalContainer onSortEnd={this.onSortEnd} lockAxis="y" transitionDuration={200} lockToContainerEdges lockOffset="0%" useDragHandle>
 					{intervalsToDisplay.map((i, index) => {
 						const config = {
 							id: i.id,

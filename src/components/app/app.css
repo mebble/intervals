@@ -10,6 +10,10 @@
 	font-size: 16px;
 }
 
+.IntervalContainer {
+	margin: 10px 0 10px 0;
+}
+
 .button {
 	border: none;
 	border-radius: 5px;
