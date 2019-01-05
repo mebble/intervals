@@ -77,15 +77,19 @@ class Interval extends React.Component {
 	render() {
 		const { appCounting, counting, id } = this.props;
 		const { onCopy, onRemove } = this.props;
+		const DragHandle = this.props.dragHandle;
 		const intervalClass = classnames('Interval', {
 			'Interval--counting': counting
 		});
 
 		return (
 			<div className={intervalClass}>
-				<span className="Interval__elem Interval__title">
-					<Icon appCounting={appCounting} intervalCounting={counting} icon={ICONS.MARK} />
-				</span>
+				{appCounting ?
+					<span className="Interval__elem Interval__title">
+						<Icon appCounting={appCounting} intervalCounting={counting} icon={ICONS.MARK} />
+					</span> :
+					<DragHandle />
+				}
 				<button
 					className="Interval__elem button btn-input"
 					onClick={() => this.decrement()}

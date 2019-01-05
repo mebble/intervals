@@ -1,5 +1,6 @@
 import React from 'react';
 import classnames from 'classnames';
+import { sortableContainer, sortableElement, sortableHandle, arrayMove } from 'react-sortable-hoc';
 
 import './app.css';
 
@@ -10,6 +11,16 @@ import Section from '../section/section';
 import Interval from '../interval/interval';
 import Icon from '../icon/icon';
 import { ICONS, NOTES } from '../../constants';
+
+const DragHandle = sortableHandle(() => <span>::</span>);
+const SortableInterval = sortableElement(({ value }) => (
+	<Section>
+		<Interval dragHandle={DragHandle} {...value}/>
+	</Section>
+));
+const SortableIntervalContainer = sortableContainer(({ children }) => (
+	<ul>{children}</ul>
+));
 
 class App extends React.Component {
 	constructor(props) {
@@ -35,6 +46,7 @@ class App extends React.Component {
 		this.countDown = this.countDown.bind(this);
 		this.stopCountDown = this.stopCountDown.bind(this);
 		this.getNonZeroInterval = this.getNonZeroInterval.bind(this);
+		this.onSortEnd = this.onSortEnd.bind(this);
 	}
 
 	addInterval() {
@@ -183,6 +195,15 @@ class App extends React.Component {
 		});
 	}
 
+	onSortEnd({ oldIndex, newIndex }) {
+		this.setState(prevState => {
+			const { intervals } = prevState;
+			return {
+				intervals: arrayMove(intervals, oldIndex, newIndex)
+			};
+		});
+	}
+
 	render() {
 		const { intervals, intervalsInCount, countingDown, currentIndex } = this.state;
 		const intervalsToDisplay = countingDown ? intervalsInCount : intervals;
@@ -192,18 +213,20 @@ class App extends React.Component {
 				<Section>
 					<Header title="Intervals" />
 				</Section>
-				{intervalsToDisplay.map((i, index) => (
-					<Section key={i.id}>
-						<Interval
-							id={i.id}
-							totalSecs={i.time}
-							appCounting={countingDown}
-							counting={index === currentIndex}
-							onUpdateTime={this.updateIntervalTime}
-							onCopy={this.copyInterval}
-							onRemove={this.removeInterval} />
-					</Section>
-				))}
+				<SortableIntervalContainer onSortEnd={this.onSortEnd} useDragHandle>
+					{intervalsToDisplay.map((i, index) => {
+						const config = {
+							id: i.id,
+							totalSecs: i.time,
+							appCounting: countingDown,
+							counting: index === currentIndex,
+							onUpdateTime: this.updateIntervalTime,
+							onCopy: this.copyInterval,
+							onRemove: this.removeInterval
+						};
+						return <SortableInterval key={i.id} index={index} value={config} />;
+					})}
+				</SortableIntervalContainer>
 				<Section>
 					<button
 						className={classnames('button', 'btn-app')}
