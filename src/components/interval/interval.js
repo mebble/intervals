@@ -82,18 +82,18 @@ class Interval extends React.Component {
 	}
 
 	componentDidUpdate(prevProps, prevState) {
-		if (!prevProps.counting && this.props.counting) {
-			this.countDown();  // setting state in compDidUpdate. Not a prob if proper conditions are checked
-		}
-		if (prevProps.counting && !this.props.counting) {
-			// will happen when countdown is manually stopped. switch_off -> clearInterval
-			clearInterval(this.countingId);
-			console.log('Clearing', this.props.id);
-		}
-		if (this.props.counting && this.props.totalSecs <= 0) {
-			clearInterval(this.countingId);  // clearInterval -> switch_off
-			this.props.done(this.props.id);
-		}
+		// if (!prevProps.counting && this.props.counting) {
+		// 	this.countDown();  // setting state in compDidUpdate. Not a prob if proper conditions are checked
+		// }
+		// if (prevProps.counting && !this.props.counting) {
+		// 	// will happen when countdown is manually stopped. switch_off -> clearInterval
+		// 	clearInterval(this.countingId);
+		// 	console.log('Clearing', this.props.id);
+		// }
+		// if (this.props.counting && this.props.totalSecs <= 0) {
+		// 	clearInterval(this.countingId);  // clearInterval -> switch_off
+		// 	this.props.done(this.props.id);
+		// }
 	}
 
 	componentWillUnmount() {
@@ -107,11 +107,11 @@ class Interval extends React.Component {
 		return (
 			<div className="Interval">
 				<span className="Interval__elem Interval__title">
-					<Icon appCounting={appCounting} intervalCounting={counting} icon={ICONS.MARK} />
+					<Icon appCounting={appCounting} intervalCounting={false} icon={ICONS.MARK} />
 				</span>
 				<button
 					className="Interval__elem button btn-input"
-					onClick={() => !appCounting && this.decrement()}
+					onClick={() => this.decrement()}
 					disabled={appCounting}>
 					<Icon appCounting={appCounting} icon={ICONS.MINUS} />
 				</button>
@@ -123,14 +123,14 @@ class Interval extends React.Component {
 				/>
 				<button
 					className="Interval__elem button btn-input"
-					onClick={() => !appCounting && this.increment()}
+					onClick={() => this.increment()}
 					disabled={appCounting}>
 					<Icon appCounting={appCounting} icon={ICONS.PLUS} />
 				</button>
-				<button className="Interval__elem button btn-input" onClick={() => !appCounting && onCopy(id)} disabled={appCounting}>
+				<button className="Interval__elem button btn-input" onClick={() => onCopy(id)} disabled={appCounting}>
 					<Icon appCounting={appCounting} icon={ICONS.COPY} />
 				</button>
-				<button className="Interval__elem button btn-input" onClick={() => !appCounting && onRemove(id)} disabled={appCounting}>
+				<button className="Interval__elem button btn-input" onClick={() => onRemove(id)} disabled={appCounting}>
 					<Icon appCounting={appCounting} icon={ICONS.TRASH} />
 				</button>
 			</div>
