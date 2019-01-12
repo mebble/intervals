@@ -7,7 +7,7 @@ const ring = {
 
         this.oscillator.connect(this.gainNode);
         this.gainNode.connect(audioContext.destination);
-        this.oscillator.type = 'sine';
+        this.oscillator.type = 'triangle';
     },
 
     play(freq, numPulses, pulseLen) {

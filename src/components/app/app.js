@@ -8,7 +8,7 @@ import Header from '../header/header';
 import Section from '../section/section';
 import Interval from '../interval/interval';
 import Icon from '../icon/icon';
-import { ICONS } from '../../constants';
+import { ICONS, NOTES } from '../../constants';
 
 class App extends React.Component {
 	constructor(props) {
@@ -124,7 +124,7 @@ class App extends React.Component {
 					const lastIndex = newIntervals.length - 1;
 					if (currentIndex === lastIndex) {
 						clearInterval(counterID);
-						ring.play(587.33, 2, 0.3);
+						ring.play(NOTES.a5, 3, 0.1);
 						return {
 							intervals: newIntervals,
 							currentIndex: null,
@@ -138,7 +138,7 @@ class App extends React.Component {
 						} catch (error) {
 							console.log(error.message);
 							clearInterval(counterID);
-							ring.play(587.33, 2, 0.3);
+							ring.play(NOTES.a5, 3, 0.1);
 							return {
 								intervals: newIntervals,
 								currentIndex: null,
@@ -146,7 +146,7 @@ class App extends React.Component {
 								countingDown: false
 							};
 						}
-						ring.play(440, 2, 0.1);
+						ring.play(NOTES.e5, 2, 0.08);
 						return {
 							intervals: newIntervals,
 							currentIndex: nextIndex
@@ -164,7 +164,7 @@ class App extends React.Component {
 			counterID,
 			countingDown: true
 		});
-		ring.play(698.46, 1, 0.1);
+		ring.play(NOTES.c5, 1, 0.1);
 	}
 
 	stopCountDown() {
