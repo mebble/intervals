@@ -3,11 +3,11 @@
     vertical-align: middle;
 }
 .Icon__path {
-    fill: #000;
+    fill: #b1b2b4;
 }
 .Icon__path--disabled {
     fill: #777;
 }
 .Icon__path--counting {
-    fill: rgb(76, 184, 76)
+    fill: #da4345;
 }

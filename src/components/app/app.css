@@ -1,6 +1,6 @@
 .App {
-    width: 40vw;
-    margin: 0 auto;
+	width: 40vw;
+	margin: 0 auto;
 
     display: flex;
     flex-direction: column;
@@ -37,7 +37,7 @@
 .button {
 	border: none;
 	border-radius: 5px;
-	background-color: bisque;
+	background-color: #2a2c31;
 }
 .button:hover {
 	box-shadow: 0 1px 1px 0 rgb(235, 235, 235);

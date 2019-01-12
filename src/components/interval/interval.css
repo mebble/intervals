@@ -1,6 +1,10 @@
 .Interval {
 	display: flex;
 	justify-content: space-between;
+	background: #4a4a4a;
+	box-shadow: 1px 1px 1px 1px rgb(48, 48, 48);
+    padding: 10px;
+    border-radius: 5px;
 }
 .Interval__elem {
 	padding-top: 5px;
