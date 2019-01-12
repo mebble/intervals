@@ -199,23 +199,20 @@ class App extends React.Component {
 				))}
 				<Section>
 					<button
-						className={classnames('button', 'btn-app', { 'btn-app--counting': countingDown })}
+						className={classnames('button', 'btn-app')}
 						onClick={() => this.addInterval()}
 						disabled={countingDown}>
 						<Icon appCounting={countingDown} icon={ICONS.PLUS} />
 					</button>
-				</Section>
-				<Section>
 					{countingDown ?
 						<button
-							className={classnames('button', 'btn-app', 'btn-app--counting')}
+							className={classnames('button', 'btn-app')}
 							onClick={() => this.stopCountDown()}>
 							<Icon icon={ICONS.STOP} />
 						</button> :
 						<button
 							className={classnames('button', 'btn-app')}
-							onClick={() => this.countDown()}
-							disabled={countingDown}>
+							onClick={() => this.countDown()}>
 							<Icon icon={ICONS.PLAY} />
 						</button>
 					}
