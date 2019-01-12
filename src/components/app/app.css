@@ -40,13 +40,10 @@
 	background-color: #2a2c31;
 }
 .button:hover {
-	box-shadow: 0 1px 1px 0 rgb(235, 235, 235);
+	box-shadow: 0 1px 1px 0 rgb(48, 48, 48);
 }
 
 .btn-app {
 	width: 100%;
 	height: 30px;
-}
-.btn-app--counting {
-	/* background-color: #fb8383; */
 }
