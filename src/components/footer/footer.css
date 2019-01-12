@@ -1,0 +1,16 @@
+.Footer {
+    font-family: 'Reem Kufi', sans-serif;
+    color: #ddd;
+    font-size: 12px;
+    letter-spacing: 1px;
+    background-color: rgb(31, 31, 31);
+    border: 0px;
+    border-radius: 5px;
+    padding: 10px;
+    text-align: center;
+}
+
+a {
+    text-decoration: none;
+    color: #968e9b;
+}

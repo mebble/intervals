@@ -5,6 +5,7 @@ import './app.css';
 
 import ring from '../../util/ring';
 import Header from '../header/header';
+import Footer from '../footer/footer';
 import Section from '../section/section';
 import Interval from '../interval/interval';
 import Icon from '../icon/icon';
@@ -222,6 +223,11 @@ class App extends React.Component {
 							<Icon icon={ICONS.PLAY} />
 						</button>
 					}
+				</Section>
+				<Section>
+					<Footer>
+						Made by <a href="https://github.com/mebble">mebble <Icon icon={ICONS.GITHUB} /></a><br />Fork me <a href="https://github.com/mebble/intervals">here</a>
+					</Footer>
 				</Section>
 			</div>
 		);
