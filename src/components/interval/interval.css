@@ -6,6 +6,9 @@
     padding: 10px;
     border-radius: 5px;
 }
+.Interval--counting {
+	box-shadow: 2px 2px 3px 2px rgb(48, 48, 48);
+}
 .Interval__title::before {
 	/* Center the svg icon child */
 	content: "";
