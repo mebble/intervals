@@ -3,19 +3,16 @@ import classnames from 'classnames';
 
 import './app.css';
 
-import Ring from '../../util/ring';
+import ring from '../../util/ring';
 import Header from '../header/header';
 import Section from '../section/section';
 import Interval from '../interval/interval';
 import Icon from '../icon/icon';
 import { ICONS } from '../../constants';
 
-const audioContext = new (window.AudioContext || window.webkitAudioContext)();
-
 class App extends React.Component {
 	constructor(props) {
 		super(props);
-		this.ring = new Ring(audioContext);
 		this.state = {
 			intervals: [
 				{
@@ -127,7 +124,7 @@ class App extends React.Component {
 					const lastIndex = newIntervals.length - 1;
 					if (currentIndex === lastIndex) {
 						clearInterval(counterID);
-						this.ring.play(587.33, 2, 0.3);
+						ring.play(587.33, 2, 0.3);
 						return {
 							intervals: newIntervals,
 							currentIndex: null,
@@ -141,7 +138,7 @@ class App extends React.Component {
 						} catch (error) {
 							console.log(error.message);
 							clearInterval(counterID);
-							this.ring.play(587.33, 2, 0.3);
+							ring.play(587.33, 2, 0.3);
 							return {
 								intervals: newIntervals,
 								currentIndex: null,
@@ -149,7 +146,7 @@ class App extends React.Component {
 								countingDown: false
 							};
 						}
-						this.ring.play(440, 2, 0.1);
+						ring.play(440, 2, 0.1);
 						return {
 							intervals: newIntervals,
 							currentIndex: nextIndex
@@ -167,7 +164,7 @@ class App extends React.Component {
 			counterID,
 			countingDown: true
 		});
-		this.ring.play(698.46, 1, 0.1);
+		ring.play(698.46, 1, 0.1);
 	}
 
 	stopCountDown() {

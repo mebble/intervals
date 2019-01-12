@@ -1,23 +1,21 @@
-class Ring {
-    constructor(context) {
-        this.context = context;
-    }
+const audioContext = new (window.AudioContext || window.webkitAudioContext)();
 
+const ring = {
     init() {
-        this.oscillator = this.context.createOscillator();
-        this.gainNode = this.context.createGain();
+        this.oscillator = audioContext.createOscillator();
+        this.gainNode = audioContext.createGain();
 
         this.oscillator.connect(this.gainNode);
-        this.gainNode.connect(this.context.destination);
+        this.gainNode.connect(audioContext.destination);
         this.oscillator.type = 'sine';
-    }
+    },
 
     play(freq, numPulses, pulseLen) {
         this.init();
         this.oscillator.frequency.value = freq;
 
         const imax = 2 * numPulses;
-        const startTime = this.context.currentTime;
+        const startTime = audioContext.currentTime;
         for (let i = 0; i < imax; i++) {
             let gain = Number(i % 2 === 0);
             let time = startTime + i * pulseLen;
@@ -25,12 +23,9 @@ class Ring {
         }
 
         this.oscillator.start(startTime);
-        this.stop(startTime, 2 * numPulses * pulseLen);
-    }
-
-    stop(startTime, duration) {
+        const duration = 2 * numPulses * pulseLen;
         this.oscillator.stop(startTime + duration);
     }
-}
+};
 
-export default Ring;
+export default ring;
