@@ -20,6 +20,7 @@ class App extends React.Component {
 					time: 0,  // between 0 and 3600, mins in [0, 60], secs in [0, 59]
 				}
 			],
+			intervalsInCount: null,
 			countingDown: false,
 			currentIndex: null,  // the index of the current interval counting down
 			counterID: null,  // the setInterval counter ID,
@@ -106,17 +107,19 @@ class App extends React.Component {
 
 	countDown() {
 		const { intervals } = this.state;
+		const intervalsInCount = intervals.map(i => ({ ...i }));
+
 		let currentIndex;
 		try {
-			currentIndex = this.getNonZeroInterval(intervals, 0);
+			currentIndex = this.getNonZeroInterval(intervalsInCount, 0);
 		} catch (error) {
 			console.log(error.message);
 			return;
 		}
 		const counterID = setInterval(() => {
 			this.setState(prevState => {
-				const { intervals, currentIndex, counterID } = prevState;
-				const newIntervals = [...intervals];
+				const { intervalsInCount, currentIndex, counterID } = prevState;
+				const newIntervals = [...intervalsInCount];
 				const current = newIntervals[currentIndex];
 				current.time--;  // assume: interval at currentIndex is of non-zero time
 
@@ -126,7 +129,7 @@ class App extends React.Component {
 						clearInterval(counterID);
 						ring.play(NOTES.a5, 3, 0.1);
 						return {
-							intervals: newIntervals,
+							intervalsInCount: null,
 							currentIndex: null,
 							counterID: null,
 							countingDown: false
@@ -140,7 +143,7 @@ class App extends React.Component {
 							clearInterval(counterID);
 							ring.play(NOTES.a5, 3, 0.1);
 							return {
-								intervals: newIntervals,
+								intervalsInCount: null,
 								currentIndex: null,
 								counterID: null,
 								countingDown: false
@@ -148,13 +151,13 @@ class App extends React.Component {
 						}
 						ring.play(NOTES.e5, 2, 0.08);
 						return {
-							intervals: newIntervals,
+							intervalsInCount: newIntervals,
 							currentIndex: nextIndex
 						};
 					}
 				} else {
 					return {
-						intervals: newIntervals
+						intervalsInCount: newIntervals
 					};
 				}
 			});
@@ -162,7 +165,8 @@ class App extends React.Component {
 		this.setState({
 			currentIndex,
 			counterID,
-			countingDown: true
+			countingDown: true,
+			intervalsInCount
 		});
 		ring.play(NOTES.c5, 1, 0.1);
 	}
@@ -173,19 +177,21 @@ class App extends React.Component {
 		this.setState({
 			currentIndex: null,
 			counterID: null,
+			intervalsInCount: null,
 			countingDown: false
 		});
 	}
 
 	render() {
-		const { intervals, countingDown, currentIndex } = this.state;
+		const { intervals, intervalsInCount, countingDown, currentIndex } = this.state;
+		const intervalsToDisplay = countingDown ? intervalsInCount : intervals;
 
 		return (
 			<div className="App">
 				<Section>
 					<Header title="Intervals" />
 				</Section>
-				{intervals.map((i, index) => (
+				{intervalsToDisplay.map((i, index) => (
 					<Section key={i.id}>
 						<Interval
 							id={i.id}
