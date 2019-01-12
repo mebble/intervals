@@ -17,7 +17,6 @@ class Interval extends React.Component {
 		this.handleSecChange = this.handleSecChange.bind(this);
 		this.increment = this.increment.bind(this);
 		this.decrement = this.decrement.bind(this);
-		this.countDown = this.countDown.bind(this);
 	}
 
 	getSeconds() {
@@ -70,34 +69,8 @@ class Interval extends React.Component {
 
 	decrement() {
 		const { totalSecs } = this.props;
-		console.log('Before dec:', totalSecs);
 		const newTotal = (totalSecs - 1) < 0 ? 0 : totalSecs - 1;
 		this.props.onUpdateTime(this.props.id, newTotal);
-	}
-
-	countDown() {
-		this.countingId = setInterval(() => {
-			this.decrement();
-		}, 1000);
-	}
-
-	componentDidUpdate(prevProps, prevState) {
-		// if (!prevProps.counting && this.props.counting) {
-		// 	this.countDown();  // setting state in compDidUpdate. Not a prob if proper conditions are checked
-		// }
-		// if (prevProps.counting && !this.props.counting) {
-		// 	// will happen when countdown is manually stopped. switch_off -> clearInterval
-		// 	clearInterval(this.countingId);
-		// 	console.log('Clearing', this.props.id);
-		// }
-		// if (this.props.counting && this.props.totalSecs <= 0) {
-		// 	clearInterval(this.countingId);  // clearInterval -> switch_off
-		// 	this.props.done(this.props.id);
-		// }
-	}
-
-	componentWillUnmount() {
-		clearInterval(this.countingId);
 	}
 
 	render() {
@@ -107,7 +80,7 @@ class Interval extends React.Component {
 		return (
 			<div className="Interval">
 				<span className="Interval__elem Interval__title">
-					<Icon appCounting={appCounting} intervalCounting={false} icon={ICONS.MARK} />
+					<Icon appCounting={appCounting} intervalCounting={counting} icon={ICONS.MARK} />
 				</span>
 				<button
 					className="Interval__elem button btn-input"

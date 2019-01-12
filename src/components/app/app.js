@@ -181,21 +181,20 @@ class App extends React.Component {
 	}
 
 	render() {
-		const { intervals, countingDown } = this.state;
+		const { intervals, countingDown, currentIndex } = this.state;
 
 		return (
 			<div className="App">
 				<Section>
 					<Header title="Intervals" />
 				</Section>
-				{intervals.map(i => (
+				{intervals.map((i, index) => (
 					<Section key={i.id}>
 						<Interval
 							id={i.id}
 							totalSecs={i.time}
 							appCounting={countingDown}
-							// counting={i.counting}
-							// done={this.intervalDone}
+							counting={index === currentIndex}
 							onUpdateTime={this.updateIntervalTime}
 							onCopy={this.copyInterval}
 							onRemove={this.removeInterval} />
