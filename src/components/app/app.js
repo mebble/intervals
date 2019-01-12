@@ -27,7 +27,7 @@ class App extends React.Component {
 			countingDown: false,
 			currentIndex: null,  // the index of the current interval counting down
 			counterID: null,  // the setInterval counter ID,
-			largestID: 1  // equals the largest interval id created
+			largestID: 0  // equals the largest interval id created
 		};
 
 		this.addInterval = this.addInterval.bind(this);
@@ -47,33 +47,43 @@ class App extends React.Component {
 	addInterval() {
 		this.setState(prevState => {
 			const { intervals, largestID } = prevState;
+			const newLargestID = largestID + 1;
 			const newIntervals = [...intervals, {
-				id: largestID + 1,
+				id: newLargestID,
 				time: 0
 			}];
-			return newIntervals;
+			return {
+				intervals: newIntervals,
+				largestID: newLargestID
+			};
 		});
 	}
 
 	removeInterval(intervalId) {
 		this.setState(prevState => {
 			const { intervals } = prevState;
-			const newIntervals = intervals.filter(i.id !== intervalId);
-			return newIntervals;
+			const newIntervals = intervals.filter(i => i.id !== intervalId);
+			return {
+				intervals: newIntervals
+			};
 		});
 	}
 
 	copyInterval(intervalId) {
-		console.log('wanna copy')
 		this.setState(prevState => {
 			const { intervals, largestID } = prevState;
 			const newIntervals = [...intervals];
 			const interval = newIntervals.find(i => i.id === intervalId);
 			const index = newIntervals.indexOf(interval);
+			const newLargestID = largestID + 1;
 			newIntervals.splice(index + 1, 0, {
-				id: largestID + 1,
+				id: newLargestID,
 				time: interval.time
 			});
+			return {
+				intervals: newIntervals,
+				largestID: newLargestID
+			};
 		});
 	}
 
@@ -205,7 +215,7 @@ class App extends React.Component {
 							countingDown: false
 						};
 					} else {
-						let next;
+						let nextIndex;
 						try {
 							nextIndex = this.getNonZeroInterval(newIntervals, currentIndex + 1);
 						} catch (error) {
