@@ -15,7 +15,6 @@ const audioContext = new (window.AudioContext || window.webkitAudioContext)();
 class App extends React.Component {
 	constructor(props) {
 		super(props);
-		// this.currentInterval = -1;  // index of interval undergoing countdown
 		this.ring = new Ring(audioContext);
 		this.state = {
 			intervals: [
@@ -36,11 +35,6 @@ class App extends React.Component {
 		this.updateIntervalTime = this.updateIntervalTime.bind(this);
 		this.countDown = this.countDown.bind(this);
 		this.stopCountDown = this.stopCountDown.bind(this);
-		// this.appCountDown = this.appCountDown.bind(this);
-		// this.appStopped = this.appStopped.bind(this);
-		// this.appDone = this.appDone.bind(this);
-		// this.intervalCountDown = this.intervalCountDown.bind(this);
-		// this.intervalDone = this.intervalDone.bind(this);
 		this.getNonZeroInterval = this.getNonZeroInterval.bind(this);
 	}
 
@@ -87,44 +81,6 @@ class App extends React.Component {
 		});
 	}
 
-	// appCountDown() {
-	// 	const { intervals } = this.state;
-
-	// 	if (!intervals.some(i => i.totalSecs > 0)) return;
-
-	// 	this.setState({ counting: true });
-	// 	this.ring.play(698.46, 1, 0.1);
-	// }
-
-	// appStopped() {
-	// 	this.setState(prevState => {
-	// 		const intervals = prevState.intervals.map(i => Object.assign({}, i));
-	// 		for (const i of intervals) {
-	// 			i.counting = false;  // switch_off
-	// 		}
-	// 		return {
-	// 			counting: false,
-	// 			intervals: intervals
-	// 		};
-	// 	});
-	// }
-
-	// appDone() {
-	// 	this.ring.play(587.33, 2, 0.3);
-	// 	this.setState({ counting: false });
-	// 	console.log('App is done!');
-	// }
-
-	// intervalCountDown(index) {
-	// 	this.setState(prevState => {
-	// 		const intervals = prevState.intervals.map(i => Object.assign({}, i));
-	// 		intervals[index].counting = true;  // switch_on
-	// 		return {
-	// 			intervals: intervals
-	// 		};
-	// 	});
-	// }
-
 	updateIntervalTime(intervalId, newTime) {
 		this.setState(prevState => {
 			const { intervals } = prevState;
@@ -136,27 +92,6 @@ class App extends React.Component {
 			};
 		});
 	}
-
-	// intervalDone(intervalId) {
-	// 	this.setState(prevState => {
-	// 		const intervals = prevState.intervals.map(i => Object.assign({}, i));
-	// 		const interval = intervals.find(i => i.id === intervalId);
-	// 		interval.counting = false;  // switch_off
-	// 		return {
-	// 			intervals: intervals
-	// 		};
-	// 	});
-
-	// 	console.log(this.state.intervals[this.currentInterval].id, 'is done');
-
-	// 	this.currentInterval = this.getNonZeroInterval(this.state, this.currentInterval + 1);  // won't get updated 'interval counting' state, but updated totalSeconds
-	// 	if (this.currentInterval === -1) {
-	// 		this.appDone();
-	// 	} else {
-	// 		this.ring.play(440, 2, 0.1);
-	// 		this.intervalCountDown(this.currentInterval);
-	// 	}
-	// }
 
 	getNonZeroInterval(intervals, index) {
 		/**
@@ -170,22 +105,6 @@ class App extends React.Component {
 			index++;
 		}
 		throw new Error('No non-zero interval present!');
-	}
-
-	componentDidUpdate(prevProps, prevState) {
-		// if (!prevState.counting && this.state.counting) {
-		// 	this.currentInterval = this.getNonZeroInterval(this.state, this.currentInterval + 1);
-		// 	if (this.currentInterval === -1) {
-		// 		this.appDone();
-		// 		return;
-		// 	}
-		// 	this.intervalCountDown(this.currentInterval);
-		// 	console.log(this.state.intervals.map(i => i.counting));  // expected all false
-		// }
-		// if (prevState.counting && !this.state.counting) {
-		// 	this.currentInterval = -1;
-		// 	console.log(this.state.intervals.map(i => i.counting));  // expected all false
-		// }
 	}
 
 	countDown() {
@@ -208,6 +127,7 @@ class App extends React.Component {
 					const lastIndex = newIntervals.length - 1;
 					if (currentIndex === lastIndex) {
 						clearInterval(counterID);
+						this.ring.play(587.33, 2, 0.3);
 						return {
 							intervals: newIntervals,
 							currentIndex: null,
@@ -221,6 +141,7 @@ class App extends React.Component {
 						} catch (error) {
 							console.log(error.message);
 							clearInterval(counterID);
+							this.ring.play(587.33, 2, 0.3);
 							return {
 								intervals: newIntervals,
 								currentIndex: null,
@@ -228,6 +149,7 @@ class App extends React.Component {
 								countingDown: false
 							};
 						}
+						this.ring.play(440, 2, 0.1);
 						return {
 							intervals: newIntervals,
 							currentIndex: nextIndex
@@ -244,7 +166,8 @@ class App extends React.Component {
 			currentIndex,
 			counterID,
 			countingDown: true
-		})
+		});
+		this.ring.play(698.46, 1, 0.1);
 	}
 
 	stopCountDown() {
