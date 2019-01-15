@@ -1,61 +1,61 @@
 .App {
-	width: 40vw;
-	margin: 20px auto;
+  width: 40vw;
+  margin: 20px auto;
 
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 .App * {
-	font-size: 16px;
+  font-size: 16px;
 }
 
 .IntervalContainer {
-	margin: 10px 0 10px 0;
+  margin: 10px 0 10px 0;
 }
 
 .button {
-	border: none;
-	border-radius: 5px;
-	background-color: #2a2c31;
-	height: 30px;
-	margin: 0 5px 0 5px;
+  border: none;
+  border-radius: 5px;
+  background-color: #2a2c31;
+  height: 30px;
+  margin: 0 5px 0 5px;
 }
 .button:hover {
-	box-shadow: 0 1px 1px 0 rgb(50, 50, 50);
+  box-shadow: 0 1px 1px 0 rgb(50, 50, 50);
 }
 
 .btn-input {
-	width: 40px;
+  width: 40px;
 }
 
 .btn-app {
-	width: 100%;
+  width: 100%;
 }
 
 @media screen and (max-width: 1440px) {
-	.App {
-		width: 50vw;
-	}
+  .App {
+    width: 50vw;
+  }
 }
 @media screen and (max-width: 1024px) {
-	.App {
-		width: 60vw;
-	}
+  .App {
+    width: 60vw;
+  }
 }
 @media screen and (max-width: 672px) {
-	.App {
-		width: 75vw;
-	}
-	.App * {
-		font-size: 12px;
-	}
-	.btn-input {
-		margin: 0 2px 0 2px;
-	}
+  .App {
+    width: 75vw;
+  }
+  .App * {
+    font-size: 12px;
+  }
+  .btn-input {
+    margin: 0 2px 0 2px;
+  }
 }
 @media screen and (max-width: 432px) {
-	.App {
-		width: 90vw;
-	}
+  .App {
+    width: 90vw;
+  }
 }
