@@ -1,17 +1,17 @@
-const audioContext = new (window.AudioContext || window.webkitAudioContext)();
-
 const ring = {
     init() {
+        const audioContext = new (window.AudioContext || window.webkitAudioContext)();
         this.oscillator = audioContext.createOscillator();
         this.gainNode = audioContext.createGain();
 
         this.oscillator.connect(this.gainNode);
         this.gainNode.connect(audioContext.destination);
         this.oscillator.type = 'triangle';
+        return audioContext;
     },
 
     play(freq, numPulses, pulseLen) {
-        this.init();
+        const audioContext = this.init();
         this.oscillator.frequency.value = freq;
 
         const imax = 2 * numPulses;
