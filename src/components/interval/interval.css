@@ -18,4 +18,5 @@
 }
 .Interval__title {
 	margin: 0 7px 0 5px;
+	cursor: pointer;
 }

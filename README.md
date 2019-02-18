@@ -34,9 +34,10 @@ You can use the [React Developer Tools Chrome extension](https://chrome.google.c
 
 ## TODOs
 These are the TODOs in order of priority:
-- [ ] drag and drop
+- [x] drag and drop
 - [ ] save presets using localStorage
-- [ ] pause button
+- [x] pause button
+- [ ] light/dark theme
 - [ ] compound intervals that consist of simple ones
 - [ ] timer repeats for both simple and compound intervals
 - [ ] beep on last 3 ticks before timer ends per interval
