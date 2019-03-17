@@ -1,11 +1,7 @@
-import React from 'react';
+import React from "react";
 
-import './section.css';
+import "./section.css";
 
-const Section = props => (
-    <div className="Section">
-        {props.children}
-    </div>
-);
+const Section = ({ children }) => <div className="Section">{children}</div>;
 
 export default Section;

@@ -19,8 +19,8 @@
   },
   "dependencies": {
     "classnames": "^2.2.5",
-    "react": "^16.3.2",
-    "react-dom": "^16.3.2",
+    "react": "16.8.4",
+    "react-dom": "16.8.4",
     "react-sortable-hoc": "^1.4.0"
   }
 }
