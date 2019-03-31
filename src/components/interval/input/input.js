@@ -1,13 +1,23 @@
-import React from 'react';
+import React from "react";
 
-import './input.css';
+import "./input.css";
 
-const Input = props => (
-	<div className="Input">
-		<input className="Input__field" type="text" value={props.leftValue} onChange={props.onLeftChange} />
-		<span className="Input__separator"></span>
-		<input className="Input__field" type="text" value={props.rightValue} onChange={props.onRightChange} />
-	</div>
+const Input = ({ leftValue, rightValue, onLeftChange, onRightChange }) => (
+  <div className="Input">
+    <input
+      className="Input__field"
+      type="text"
+      value={leftValue}
+      onChange={onLeftChange}
+    />
+    <span className="Input__separator" />
+    <input
+      className="Input__field"
+      type="text"
+      value={rightValue}
+      onChange={onRightChange}
+    />
+  </div>
 );
 
 export default Input;
