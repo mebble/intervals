@@ -89,6 +89,7 @@ function Interval({
         className="Interval__elem button btn-input"
         onClick={() => decrement()}
         disabled={appCounting}
+        aria-label="Decrease the Interval Length"
       >
         <Icon appCounting={appCounting} icon={ICONS.MINUS} />
       </button>
@@ -102,6 +103,7 @@ function Interval({
         className="Interval__elem button btn-input"
         onClick={() => increment()}
         disabled={appCounting}
+        aria-label="Increase the Interval Length"
       >
         <Icon appCounting={appCounting} icon={ICONS.PLUS} />
       </button>
@@ -109,6 +111,7 @@ function Interval({
         className="Interval__elem button btn-input"
         onClick={() => onCopy(id)}
         disabled={appCounting}
+        aria-label="Copy the Interval"
       >
         <Icon appCounting={appCounting} icon={ICONS.COPY} />
       </button>
@@ -116,6 +119,7 @@ function Interval({
         className="Interval__elem button btn-input"
         onClick={() => onRemove(id)}
         disabled={appCounting}
+        aria-label="Delete the Interval"
       >
         <Icon appCounting={appCounting} icon={ICONS.TRASH} />
       </button>
