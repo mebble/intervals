@@ -230,6 +230,7 @@ function App() {
           className={classnames("button", "btn-app")}
           onClick={() => addInterval()}
           disabled={countingDown}
+          aria-label="Add an Interval"
         >
           <Icon appCounting={countingDown} icon={ICONS.PLUS} />
         </button>
@@ -238,6 +239,7 @@ function App() {
             <button
               className={classnames("button", "btn-app")}
               onClick={() => resumeCountDown()}
+              aria-label="Pause the current interval"
             >
               <Icon icon={ICONS.PLAY} />
             </button>
@@ -245,6 +247,7 @@ function App() {
             <button
               className={classnames("button", "btn-app")}
               onClick={() => pauseCountDown()}
+              aria-label="Pause the current interval"
             >
               <Icon icon={ICONS.PAUSE} />
             </button>
@@ -253,6 +256,7 @@ function App() {
           <button
             className={classnames("button", "btn-app")}
             onClick={() => stopCountDown()}
+            aria-label="Stop the current interval"
           >
             <Icon icon={ICONS.STOP} />
           </button>
@@ -260,6 +264,7 @@ function App() {
           <button
             className={classnames("button", "btn-app")}
             onClick={() => startCountDown()}
+            aria-label="Start the interval"
           >
             <Icon icon={ICONS.PLAY} />
           </button>
