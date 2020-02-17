@@ -126,7 +126,13 @@ function App() {
     if (intervalsInCount) {
       const newIntervals = [...intervalsInCount];
       const current = newIntervals[currentIndex];
-      current.time--; // assume: interval at currentIndex is of non-zero time
+      // current.time--; // assume: interval at currentIndex is of non-zero time
+      current.time--;
+
+      while (current.time <= 3 && current.time > 0) {
+        ring.play(NOTES.e5, 1, 0.08);
+        break;
+      }
       if (current.time === 0) {
         const lastIndex = newIntervals.length - 1;
         if (currentIndex === lastIndex) {
